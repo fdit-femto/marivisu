@@ -1,0 +1,10 @@
+
+<div class="list-group border" id="list-tab" role="tablist">
+  <h2 class="side-title">Vessel</h2>
+  <a *ngFor="let vessel of vessels | keyvalue" class=" list-group-item list-group-item-action" id="{{vessel.value.mmsi}}"
+     data-toggle="list" role="tab">
+    {{vessel.value.mmsi}} - {{vessel.value.vesselName}}
+  </a>
+</div>
+
+

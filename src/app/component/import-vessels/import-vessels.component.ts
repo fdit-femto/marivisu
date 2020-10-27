@@ -59,6 +59,7 @@ export class ImportVesselsComponent implements OnInit {
         const newVessel = new Vessel(splitLine);
         this.vessels.set(Number(newVessel.mmsi), newVessel);
       }
+      this.vesselsService.changeVesselsSet(this.vessels);
     };
 
     fileReader.onprogress = (e ) => {
