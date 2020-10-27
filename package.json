@@ -20,6 +20,10 @@
     "@angular/platform-browser-dynamic": "~10.2.0",
     "@angular/router": "~10.2.0",
     "bootstrap": "^4.5.3",
+    "jquery": "^3.5.1",
+    "ngx-bootstrap-icons": "^1.2.0",
+    "ngx-dropzone": "^2.2.2",
+    "popper.js": "^1.16.1",
     "rxjs": "^6.6.3",
     "tslib": "^2.0.0",
     "zone.js": "~0.10.2"
