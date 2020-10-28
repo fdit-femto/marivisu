@@ -1,18 +1,18 @@
 import {Injectable} from '@angular/core';
-import {BehaviorSubject, Observable} from 'rxjs';
-import {Message} from '../model/message';
+import {BehaviorSubject} from 'rxjs';
+import {Vessels} from '../model/vessels';
 
 @Injectable({
   providedIn: 'root'
 })
 export class VesselsService {
-  private vessels = new BehaviorSubject(new Map());
+  private vessels = new BehaviorSubject(new Vessels());
   currentVessels = this.vessels.asObservable();
 
   constructor() {
   }
 
-  changeVesselsSet(newVessels: Map<number, Message>): void {
+  changeVesselsSet(newVessels: Vessels): void {
     this.vessels.next(newVessels);
   }
 }

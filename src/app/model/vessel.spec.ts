@@ -1,7 +1,7 @@
-import { Message } from './message';
+import { Vessel } from './vessel';
 
 describe('Vessel', () => {
-  // it('should create an instance', () => {
-  //   expect(new Vessel()).toBeTruthy();
-  // });
+  it('should create an instance', () => {
+    // expect(new Vessel()).toBeTruthy();
+  });
 });

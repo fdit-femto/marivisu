@@ -1,3 +1,20 @@
 <app-nav-bar></app-nav-bar>
-<app-list-vessel></app-list-vessel>
+
+<div style="width: auto; height: 94.7vh;">
+  <as-split direction="horizontal" >
+    <as-split-area size="20">
+      <app-list-vessel></app-list-vessel>
+    </as-split-area>
+    <as-split-area size="80">
+      <as-split direction="vertical">
+        <as-split-area size="100">
+          map
+        </as-split-area>
+        <as-split-area size="100">
+          Graph
+        </as-split-area>
+      </as-split>
+    </as-split-area>
+  </as-split>
+</div>
 <router-outlet></router-outlet>

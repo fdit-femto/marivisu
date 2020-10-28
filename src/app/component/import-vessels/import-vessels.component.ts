@@ -1,6 +1,8 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {VesselsService} from '../../service/vessels.service';
 import {Message} from '../../model/message';
+import {Vessel} from '../../model/vessel';
+import {Vessels} from '../../model/vessels';
 
 @Component({
   selector: 'app-import-vessels',
@@ -8,8 +10,7 @@ import {Message} from '../../model/message';
   styleUrls: ['./import-vessels.component.scss']
 })
 export class ImportVesselsComponent implements OnInit {
-  vessels: Map<number, Message>;
-
+  vessels: Vessels;
 
   constructor(private vesselsService: VesselsService) {
   }
@@ -50,14 +51,18 @@ export class ImportVesselsComponent implements OnInit {
   uploadFilesSimulator(index: number): void {
     const fileReader = new FileReader();
     let nbLine: number;
-
     fileReader.onload = (e) => {
+      this.vessels = new Vessels();
       const lines: string[] = (fileReader.result as string).split('\n');
       nbLine = lines.length;
-      for (const line of lines) {
+      for (let line of lines) {
+        line = line.replace(/[^\x20-\x7F]/g, '');
         const splitLine = line.split(',');
-        const newVessel = new Message(splitLine);
-        this.vessels.set(Number(newVessel.mmsi), newVessel);
+        if (isNaN(Number(splitLine[0])) || line === '') {
+          continue;
+        }
+        const newMessage = new Message(splitLine);
+        this.vessels.addMessage(newMessage);
       }
       this.vesselsService.changeVesselsSet(this.vessels);
     };

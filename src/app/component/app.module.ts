@@ -1,16 +1,17 @@
-import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
-import { NgxBootstrapIconsModule, allIcons } from 'ngx-bootstrap-icons';
+import {BrowserModule} from '@angular/platform-browser';
+import {NgModule} from '@angular/core';
+import {allIcons, NgxBootstrapIconsModule} from 'ngx-bootstrap-icons';
 
-import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
-import { NavBarComponent } from './nav-bar/nav-bar.component';
-import { MapComponent } from './map/map.component';
-import { GraphComponent } from './graph/graph.component';
-import { ProgressComponent } from './import-vessels/progress/progress.component';
-import { ImportVesselsComponent } from './import-vessels/import-vessels.component';
-import { ImportVesselsDirective } from './import-vessels/import-vessels.directive';
-import { ListVesselComponent } from './list-vessel/list-vessel.component';
+import {AppRoutingModule} from './app-routing.module';
+import {AppComponent} from './app.component';
+import {NavBarComponent} from './nav-bar/nav-bar.component';
+import {MapComponent} from './map/map.component';
+import {GraphComponent} from './graph/graph.component';
+import {ProgressComponent} from './import-vessels/progress/progress.component';
+import {ImportVesselsComponent} from './import-vessels/import-vessels.component';
+import {ImportVesselsDirective} from './import-vessels/import-vessels.directive';
+import {ListVesselComponent} from './list-vessel/list-vessel.component';
+import {AngularSplitModule} from 'angular-split';
 
 @NgModule({
   declarations: [
@@ -26,9 +27,11 @@ import { ListVesselComponent } from './list-vessel/list-vessel.component';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    NgxBootstrapIconsModule.pick(allIcons)
+    NgxBootstrapIconsModule.pick(allIcons),
+    AngularSplitModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+}
