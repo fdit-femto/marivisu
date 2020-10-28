@@ -1,6 +1,6 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {VesselsService} from '../../service/vessels.service';
-import {Vessel} from '../../model/vessel';
+import {Message} from '../../model/message';
 
 @Component({
   selector: 'app-import-vessels',
@@ -8,7 +8,7 @@ import {Vessel} from '../../model/vessel';
   styleUrls: ['./import-vessels.component.scss']
 })
 export class ImportVesselsComponent implements OnInit {
-  vessels: Map<number, Vessel>;
+  vessels: Map<number, Message>;
 
 
   constructor(private vesselsService: VesselsService) {
@@ -56,7 +56,7 @@ export class ImportVesselsComponent implements OnInit {
       nbLine = lines.length;
       for (const line of lines) {
         const splitLine = line.split(',');
-        const newVessel = new Vessel(splitLine);
+        const newVessel = new Message(splitLine);
         this.vessels.set(Number(newVessel.mmsi), newVessel);
       }
       this.vesselsService.changeVesselsSet(this.vessels);

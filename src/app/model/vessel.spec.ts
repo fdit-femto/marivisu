@@ -1,4 +1,4 @@
-import { Vessel } from './vessel';
+import { Message } from './message';
 
 describe('Vessel', () => {
   // it('should create an instance', () => {

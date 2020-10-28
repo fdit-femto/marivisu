@@ -1,4 +1,4 @@
-export class Vessel {
+export class Message {
   mmsi: string;
   time: string;
   latitude: string;

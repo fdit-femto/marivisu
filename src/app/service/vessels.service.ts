@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {BehaviorSubject, Observable} from 'rxjs';
-import {Vessel} from '../model/vessel';
+import {Message} from '../model/message';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +12,7 @@ export class VesselsService {
   constructor() {
   }
 
-  changeVesselsSet(newVessels: Map<number, Vessel>): void {
+  changeVesselsSet(newVessels: Map<number, Message>): void {
     this.vessels.next(newVessels);
   }
 }

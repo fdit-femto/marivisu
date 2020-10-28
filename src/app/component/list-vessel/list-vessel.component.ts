@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {Vessel} from '../../model/vessel';
+import {Message} from '../../model/message';
 import {VesselsService} from '../../service/vessels.service';
 
 @Component({
@@ -8,7 +8,7 @@ import {VesselsService} from '../../service/vessels.service';
   styleUrls: ['./list-vessel.component.scss']
 })
 export class ListVesselComponent implements OnInit {
-  vessels: Map<number, Vessel>;
+  vessels: Map<number, Message>;
 
 
   constructor(private vesselsService: VesselsService) {
