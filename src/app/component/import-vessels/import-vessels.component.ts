@@ -1,7 +1,6 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {VesselsService} from '../../service/vessels.service';
 import {Message} from '../../model/message';
-import {Vessel} from '../../model/vessel';
 import {Vessels} from '../../model/vessels';
 
 @Component({
@@ -44,11 +43,13 @@ export class ImportVesselsComponent implements OnInit {
     if (this.files[index].progress < 100) {
       return;
     }
+    this.vessels = new Vessels();
+    this.vesselsService.changeVesselsSet(this.vessels);
     this.files.splice(index, 1);
   }
 
 
-  uploadFilesSimulator(index: number): void {
+  uploadFiles(index: number): void {
     const fileReader = new FileReader();
     let nbLine: number;
     fileReader.onload = (e) => {
@@ -67,7 +68,7 @@ export class ImportVesselsComponent implements OnInit {
       this.vesselsService.changeVesselsSet(this.vessels);
     };
 
-    fileReader.onprogress = (e ) => {
+    fileReader.onprogress = (e) => {
       if (e.lengthComputable) {
         this.files[index].progress = Math.round(((e.loaded / e.total) * 100));
       }
@@ -77,12 +78,13 @@ export class ImportVesselsComponent implements OnInit {
   }
 
   prepareFilesList(files: Array<any>): void {
+    this.files = [];
     for (const item of files) {
       item.progress = 0;
       this.files.push(item);
     }
     this.fileDropEl.nativeElement.value = '';
-    this.uploadFilesSimulator(0);
+    this.uploadFiles(0);
   }
 
   formatBytes(bytes, decimals = 2): string {
