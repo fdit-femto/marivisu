@@ -19,4 +19,8 @@ export class Vessel {
     return this.messages[0].vesselName;
   }
 
+  public getColor(): string {
+    return (+this.getMMSI()).toString(16);
+  }
+
 }

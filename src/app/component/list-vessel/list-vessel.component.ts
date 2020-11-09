@@ -1,6 +1,7 @@
-import {Component, OnInit} from '@angular/core';
+import {AfterViewInit, Component, OnInit} from '@angular/core';
 import {VesselsService} from '../../service/vessels.service';
 import {Vessels} from '../../model/vessels';
+
 declare var $: any;
 
 @Component({
@@ -11,13 +12,14 @@ declare var $: any;
 export class ListVesselComponent implements OnInit {
   vessels: Vessels;
 
-
   constructor(private vesselsService: VesselsService) {
   }
 
   ngOnInit(): void {
     this.vesselsService.currentVessels.subscribe(vessels => {
-      this.vessels = vessels;
+      setTimeout(() =>
+        this.vessels = vessels
+      );
     });
 
     $(document).ready(() => {
@@ -29,4 +31,13 @@ export class ListVesselComponent implements OnInit {
       });
     });
   }
+
+  // ngAfterViewInit(): void {
+  //   this.vesselsService.currentVessels.subscribe(vessels => {
+  //     setTimeout(() =>
+  //       this.vessels = vessels
+  //     );
+  //   });
+  // }
+
 }

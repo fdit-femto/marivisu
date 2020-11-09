@@ -21,24 +21,14 @@ export class ImportVesselsComponent implements OnInit {
     this.vesselsService.currentVessels.subscribe(vessels => this.vessels = vessels);
   }
 
-  /**
-   * on file drop handler
-   */
   onFileDropped($event): void {
     this.prepareFilesList($event);
   }
 
-  /**
-   * handle file from browsing
-   */
   fileBrowseHandler(files): void {
     this.prepareFilesList(files);
   }
 
-  /**
-   * Delete file from files list
-   * @param index (File index)
-   */
   deleteFile(index: number): void {
     if (this.files[index].progress < 100) {
       return;
@@ -48,11 +38,10 @@ export class ImportVesselsComponent implements OnInit {
     this.files.splice(index, 1);
   }
 
-
   uploadFiles(index: number): void {
     const fileReader = new FileReader();
     let nbLine: number;
-    fileReader.onload = (e) => {
+    fileReader.onload = () => {
       this.vessels = new Vessels();
       const lines: string[] = (fileReader.result as string).split('\n');
       nbLine = lines.length;
