@@ -1,6 +1,5 @@
 import {Vessel} from './vessel';
 import {Message} from './message';
-import { delay } from 'rxjs/operators';
 
 export class Vessels {
   vessels: Map<number, Vessel>;

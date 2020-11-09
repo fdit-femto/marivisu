@@ -13,6 +13,7 @@ import {Message} from '../../model/message';
 export class MapComponent implements OnInit {
   vessels: Vessels;
   public map: L.Map;
+  renderer = L.canvas({ padding: 0.5 });
   circleMarkers: Map<number, CircleMarker> = new Map<number, CircleMarker>();
 
   constructor(private vesselsService: VesselsService) {
@@ -31,9 +32,7 @@ export class MapComponent implements OnInit {
   }
 
   initMap(): void {
-    this.map = L.map('map', {
-      preferCanvas: true
-    }).setView([0, 0], 1);
+    this.map = L.map('map').setView([0, 0], 1);
     L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
       attribution: 'map',
     }).addTo(this.map);
@@ -42,6 +41,7 @@ export class MapComponent implements OnInit {
   addCircleMarker(message: Message, color: string): void {
     const circleMarker = L.circleMarker([+message.latitude, +message.longitude],
       {
+        renderer: this.renderer,
         radius: 0.1,
         color
       }).addTo(this.map);

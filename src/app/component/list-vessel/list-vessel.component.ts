@@ -32,12 +32,4 @@ export class ListVesselComponent implements OnInit {
     });
   }
 
-  // ngAfterViewInit(): void {
-  //   this.vesselsService.currentVessels.subscribe(vessels => {
-  //     setTimeout(() =>
-  //       this.vessels = vessels
-  //     );
-  //   });
-  // }
-
 }

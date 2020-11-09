@@ -20,7 +20,7 @@ export class Vessel {
   }
 
   public getColor(): string {
-    return (+this.getMMSI()).toString(16);
+    return '#' + (+this.getMMSI()).toString(16).substr(0, 6);
   }
 
 }
