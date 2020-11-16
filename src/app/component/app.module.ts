@@ -12,6 +12,10 @@ import {ImportVesselsComponent} from './import-vessels/import-vessels.component'
 import {ImportVesselsDirective} from './import-vessels/import-vessels.directive';
 import {ListVesselComponent} from './list-vessel/list-vessel.component';
 import {AngularSplitModule} from 'angular-split';
+import {PlotlyModule} from 'angular-plotly.js';
+import * as PlotlyJS from 'plotly.js/dist/plotly.js';
+
+PlotlyModule.plotlyjs = PlotlyJS;
 
 @NgModule({
   declarations: [
@@ -29,6 +33,7 @@ import {AngularSplitModule} from 'angular-split';
     AppRoutingModule,
     NgxBootstrapIconsModule.pick(allIcons),
     AngularSplitModule,
+    PlotlyModule
   ],
   providers: [],
   bootstrap: [AppComponent]

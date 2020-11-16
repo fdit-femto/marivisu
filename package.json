@@ -21,6 +21,7 @@
     "@angular/router": "~10.2.0",
     "@types/jquery": "^3.5.3",
     "@types/leaflet": "^1.5.19",
+    "angular-plotly.js": "^3.0.0",
     "angular-split": "^4.0.0",
     "bootstrap": "^4.5.3",
     "jquery": "^3.5.1",
