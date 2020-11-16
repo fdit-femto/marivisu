@@ -4,6 +4,8 @@ import {CircleMarker} from 'leaflet';
 import {Vessels} from '../../model/vessels';
 import {VesselsService} from '../../service/vessels.service';
 import {Message} from '../../model/message';
+import {SelectedVesselService} from '../../service/selected-vessel.service';
+import {Vessel} from '../../model/vessel';
 
 @Component({
   selector: 'app-map',
@@ -12,21 +14,30 @@ import {Message} from '../../model/message';
 })
 export class MapComponent implements OnInit {
   vessels: Vessels;
+  selectedVessel: Vessel;
   public map: L.Map;
-  renderer = L.canvas({ padding: 0.5 });
+  renderer = L.canvas({padding: 0.5});
   circleMarkers: Map<number, CircleMarker> = new Map<number, CircleMarker>();
 
-  constructor(private vesselsService: VesselsService) {
+  constructor(private vesselsService: VesselsService, private selectedVesselService: SelectedVesselService) {
   }
 
   ngOnInit(): void {
     this.initMap();
     this.connectVesselObservable();
+    this.connectSelectVesselObservable();
   }
 
   connectVesselObservable(): void {
     this.vesselsService.currentVessels.subscribe(vessels => {
       this.vessels = vessels;
+      this.updateMap();
+    });
+  }
+
+  connectSelectVesselObservable(): void {
+    this.selectedVesselService.currentVessel.subscribe(vessels => {
+      this.selectedVessel = vessels;
       this.updateMap();
     });
   }
@@ -39,21 +50,30 @@ export class MapComponent implements OnInit {
   }
 
   addCircleMarker(message: Message, color: string): void {
-    const circleMarker = L.circleMarker([+message.latitude, +message.longitude],
-      {
-        renderer: this.renderer,
-        radius: 0.1,
-        color
-      }).addTo(this.map);
+    let circleMarker;
+    if (message.mmsi === this.selectedVessel.getMMSI()) {
+      circleMarker = L.circleMarker([+message.latitude, +message.longitude],
+        {
+          renderer: this.renderer,
+          radius: 4,
+          color: '#ff0000',
+        }).addTo(this.map).bringToFront();
+    }else {
+      circleMarker = L.circleMarker([+message.latitude, +message.longitude],
+        {
+          renderer: this.renderer,
+          radius: 0.01,
+          color
+        }).addTo(this.map);
+    }
     this.circleMarkers.set(Number(message.mmsi), circleMarker);
   }
 
   updateMap(): void {
-    let nbMessage = 0;
+    this.circleMarkers.clear();
     this.vessels.vessels.forEach(((vessel, key) => {
       const color = vessel.getColor();
       vessel.messages.forEach((message) => {
-        nbMessage++;
         this.addCircleMarker(message, color);
       });
     }));

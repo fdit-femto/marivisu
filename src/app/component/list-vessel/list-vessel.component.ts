@@ -1,6 +1,8 @@
-import {AfterViewInit, Component, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {VesselsService} from '../../service/vessels.service';
 import {Vessels} from '../../model/vessels';
+import {Vessel} from '../../model/vessel';
+import {SelectedVesselService} from '../../service/selected-vessel.service';
 
 declare var $: any;
 
@@ -11,8 +13,9 @@ declare var $: any;
 })
 export class ListVesselComponent implements OnInit {
   vessels: Vessels;
+  selectedVessel: Vessel;
 
-  constructor(private vesselsService: VesselsService) {
+  constructor(private vesselsService: VesselsService, private selectedVesselService: SelectedVesselService) {
   }
 
   ngOnInit(): void {
@@ -20,6 +23,10 @@ export class ListVesselComponent implements OnInit {
       setTimeout(() =>
         this.vessels = vessels
       );
+    });
+
+    this.selectedVesselService.currentVessel.subscribe(selectedVessel => {
+      this.selectedVessel = selectedVessel;
     });
 
     $(document).ready(() => {
@@ -32,4 +39,7 @@ export class ListVesselComponent implements OnInit {
     });
   }
 
+  onSelectVessel(vessel: Vessel): void {
+    this.selectedVesselService.changeVesselSet(vessel);
+  }
 }
