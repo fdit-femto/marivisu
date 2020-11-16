@@ -1,4 +1,23 @@
-<plotly-plot [data]="graph.data" [layout]="graph.layout" [style]="{position: 'relative', width: '100%' , height:'100%'}">
+<div class="sticky-top" style=" margin-top: -80px;margin-left: 50px;">
+  <div class="form-row">
+    <div class="form-group col-md-2 ">
+      <label for="xaxis"></label>
+      <select id="xaxis" class="form-control">
+        <option selected>Choose x axis</option>
+        <option>...</option>
+      </select>
+    </div>
+    <div class="form-group col-md-2 ">
+      <label for="yaxis"></label>
+      <select id="yaxis" class="form-control">
+        <option selected>Choose y axis</option>
+        <option>...</option>
+      </select>
+    </div>
+  </div>
+</div>
+<plotly-plot [data]="graph.data" [layout]="graph.layout"
+             [style]="{position: 'relative', width: '100%' , height:'100%'}"></plotly-plot>
 
-</plotly-plot>
+
 
