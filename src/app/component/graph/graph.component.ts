@@ -10,6 +10,14 @@ import {Vessel} from '../../model/vessel';
 export class GraphComponent implements OnInit {
   selectedVessel: Vessel;
 
+  trace = {
+    x: [],
+    y: [],
+    mode: 'markers',
+    type: 'scatter',
+    name: '',
+  };
+
   constructor(private selectedVesselService: SelectedVesselService) {
   }
 
@@ -46,7 +54,7 @@ export class GraphComponent implements OnInit {
   connectSelectVesselObservable(): void {
     this.selectedVesselService.currentVessel.subscribe(vessels => {
       this.selectedVessel = vessels;
-      this.updateGraph();
+      this.initGraph();
     });
   }
 
@@ -56,22 +64,189 @@ export class GraphComponent implements OnInit {
     this.graph.layout.yaxis.title = '';
   }
 
-  updateGraph(): void {
+  updateXaxis(valueType: string): void {
+    this.trace.x = [];
+    switch (valueType) {
+      case 'mmsi':
+        this.selectedVessel.messages.forEach(value => {
+          this.trace.x.push(value.mmsi);
+        });
+        break;
+      case  'time':
+        this.selectedVessel.messages.forEach(value => {
+          this.trace.x.push(Date.parse(value.time) / 1000);
+        });
+        break;
+      case  'latitude':
+        this.selectedVessel.messages.forEach(value => {
+          this.trace.x.push(value.latitude);
+        });
+        break;
+      case  'longitude':
+        this.selectedVessel.messages.forEach(value => {
+          this.trace.x.push(value.longitude);
+        });
+        break;
+      case  'speedOverGround':
+        this.selectedVessel.messages.forEach(value => {
+          this.trace.x.push(value.speedOverGround);
+        });
+        break;
+      case  'courseOverGround':
+        this.selectedVessel.messages.forEach(value => {
+          this.trace.x.push(value.courseOverGround);
+        });
+        break;
+      case  'heading':
+        this.selectedVessel.messages.forEach(value => {
+          this.trace.x.push(value.heading);
+        });
+        break;
+      case  'vesselName':
+        this.selectedVessel.messages.forEach(value => {
+          this.trace.x.push(value.vesselName);
+        });
+        break;
+      case  'imo':
+        this.selectedVessel.messages.forEach(value => {
+          this.trace.x.push(value.imo);
+        });
+        break;
+      case  'callSign':
+        this.selectedVessel.messages.forEach(value => {
+          this.trace.x.push(value.callSign);
+        });
+        break;
+      case  'vesselType':
+        this.selectedVessel.messages.forEach(value => {
+          this.trace.x.push(value.vesselType);
+        });
+        break;
+      case  'status':
+        this.selectedVessel.messages.forEach(value => {
+          this.trace.x.push(value.status);
+        });
+        break;
+      case  'length':
+        this.selectedVessel.messages.forEach(value => {
+          this.trace.x.push(value.length);
+        });
+        break;
+      case  'width':
+        this.selectedVessel.messages.forEach(value => {
+          this.trace.x.push(value.width);
+        });
+        break;
+      case  'draft':
+        this.selectedVessel.messages.forEach(value => {
+          this.trace.x.push(value.draft);
+        });
+        break;
+      case  'cargo':
+        this.selectedVessel.messages.forEach(value => {
+          this.trace.x.push(value.cargo);
+        });
+        break;
+    }
+    this.graph.data = [];
+    this.graph.layout.xaxis.title = valueType;
+    this.graph.data.push(this.trace);
+  }
 
-    const trace1 = {
-      x: [],
-      y: [],
-      mode: 'markers',
-      type: 'scatter',
-      name: '',
-    };
-    this.selectedVessel.messages.forEach(value => {
-      trace1.x.push(value.longitude);
-      trace1.y.push(value.time);
-    });
-    this.graph.data.push(trace1);
-    this.graph.layout.xaxis.title = 'longitude';
-    this.graph.layout.yaxis.title = 'time';
+  updateYaxis(valueType: string): void {
+    this.trace.y = [];
+    switch (valueType) {
+      case 'mmsi':
+        this.selectedVessel.messages.forEach(value => {
+          this.trace.y.push(value.mmsi);
+        });
+        break;
+      case  'time':
+        this.selectedVessel.messages.forEach(value => {
+          this.trace.y.push(Date.parse(value.time) / 1000);
+        });
+        break;
+      case  'latitude':
+        this.selectedVessel.messages.forEach(value => {
+          this.trace.y.push(value.latitude);
+        });
+        break;
+      case  'longitude':
+        this.selectedVessel.messages.forEach(value => {
+          this.trace.y.push(value.longitude);
+        });
+        break;
+      case  'speedOverGround':
+        this.selectedVessel.messages.forEach(value => {
+          this.trace.y.push(value.speedOverGround);
+        });
+        break;
+      case  'courseOverGround':
+        this.selectedVessel.messages.forEach(value => {
+          this.trace.y.push(value.courseOverGround);
+        });
+        break;
+      case  'heading':
+        this.selectedVessel.messages.forEach(value => {
+          this.trace.y.push(value.heading);
+        });
+        break;
+      case  'vesselName':
+        this.selectedVessel.messages.forEach(value => {
+          this.trace.y.push(value.vesselName);
+        });
+        break;
+      case  'imo':
+        this.selectedVessel.messages.forEach(value => {
+          this.trace.y.push(value.imo);
+        });
+        break;
+      case  'callSign':
+        this.selectedVessel.messages.forEach(value => {
+          this.trace.y.push(value.callSign);
+        });
+        break;
+      case  'vesselType':
+        this.selectedVessel.messages.forEach(value => {
+          this.trace.y.push(value.vesselType);
+        });
+        break;
+      case  'status':
+        this.selectedVessel.messages.forEach(value => {
+          this.trace.y.push(value.status);
+        });
+        break;
+      case  'length':
+        this.selectedVessel.messages.forEach(value => {
+          this.trace.y.push(value.length);
+        });
+        break;
+      case  'width':
+        this.selectedVessel.messages.forEach(value => {
+          this.trace.y.push(value.width);
+        });
+        break;
+      case  'draft':
+        this.selectedVessel.messages.forEach(value => {
+          this.trace.y.push(value.draft);
+        });
+        break;
+      case  'cargo':
+        this.selectedVessel.messages.forEach(value => {
+          this.trace.y.push(value.cargo);
+        });
+        break;
+    }
+    this.graph.data = [];
+    this.graph.layout.yaxis.title = valueType;
+    this.graph.data.push(this.trace);
+  }
+
+
+  initGraph(): void {
+    this.graph.data.push(this.trace);
+    this.graph.layout.xaxis.title = '';
+    this.graph.layout.yaxis.title = '';
   }
 
 }
