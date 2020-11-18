@@ -2,7 +2,7 @@
   <div class="form-row">
     <div class="form-group col-md-2 ">
       <label for="xaxis"></label>
-      <select #xaxis (change)='updateXaxis(xaxis.value)' id="xaxis" class="form-control">
+      <select #xaxis (change)='updateXaxis(xaxis.value)' id="xaxis" class="form-control" style="width: 180px">
         <option selected>Choose x axis</option>
         <option [value]="'mmsi'">mmsi</option>
         <option [value]="'time'">time</option>
@@ -24,7 +24,7 @@
     </div>
     <div class="form-group col-md-2 ">
       <label for="yaxis"></label>
-      <select #yaxis (change)='updateYaxis(yaxis.value)' id="yaxis" class="form-control">
+      <select #yaxis (change)='updateYaxis(yaxis.value)' id="yaxis" class="form-control" style="width: 180px; margin-left: 60px">
         <option  selected>Choose y axis</option>
         <option [value]="'mmsi'">mmsi</option>
         <option [value]="'time'">time</option>
