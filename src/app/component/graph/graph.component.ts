@@ -8,8 +8,9 @@ import {Vessel} from '../../model/vessel';
   styleUrls: ['./graph.component.scss']
 })
 export class GraphComponent implements OnInit {
-  selectedVessel: Vessel;
-
+  private selectedVessel: Vessel;
+  private yType = '';
+  private xType = '';
   trace = {
     x: [],
     y: [],
@@ -20,20 +21,6 @@ export class GraphComponent implements OnInit {
 
   constructor(private selectedVesselService: SelectedVesselService) {
   }
-
-  // var trace1 = {
-  //   x: [1, 2, 3, 4, 5],
-  //   y: [1, 6, 3, 6, 1],
-  //   mode: 'markers+text',
-  //   type: 'scatter',
-  //   name: 'Team A',
-  //   text: ['A-1', 'A-2', 'A-3', 'A-4', 'A-5'],
-  //   textposition: 'top center',
-  //   textfont: {
-  //     family:  'Raleway, sans-serif'
-  //   },
-  //   marker: { size: 12 }
-  // };
 
   public graph = {
     data: [],
@@ -65,6 +52,7 @@ export class GraphComponent implements OnInit {
   }
 
   updateXaxis(valueType: string): void {
+    this.xType = valueType;
     this.trace.x = [];
     switch (valueType) {
       case 'mmsi':
@@ -154,6 +142,7 @@ export class GraphComponent implements OnInit {
   }
 
   updateYaxis(valueType: string): void {
+    this.yType = valueType;
     this.trace.y = [];
     switch (valueType) {
       case 'mmsi':
@@ -244,9 +233,8 @@ export class GraphComponent implements OnInit {
 
 
   initGraph(): void {
-    this.graph.data.push(this.trace);
-    this.graph.layout.xaxis.title = '';
-    this.graph.layout.yaxis.title = '';
+    this.updateXaxis(this.xType);
+    this.updateYaxis(this.yType);
   }
 
 }
