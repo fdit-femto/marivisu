@@ -11,7 +11,6 @@ export class Vessel {
   addMessage(message: Message): void {
     this.messages.push(message);
     this.determineFirstAppearance(message);
-
   }
 
   getMMSI(): string {
@@ -31,7 +30,7 @@ export class Vessel {
 
   determineFirstAppearance(message: Message): void {
     const timeInS = Date.parse(message.time) / 1000;
-    if (this.firstAppearance > timeInS) {
+    if (this.firstAppearance === undefined || this.firstAppearance > timeInS) {
       this.firstAppearance = timeInS;
     }
   }
