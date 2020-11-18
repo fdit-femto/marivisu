@@ -62,7 +62,7 @@ export class GraphComponent implements OnInit {
         break;
       case  'time':
         this.selectedVessel.messages.forEach(value => {
-          this.trace.x.push(Date.parse(value.time) / 1000);
+          this.trace.x.push(Date.parse(value.time) / 1000 - this.selectedVessel.firstAppearance);
         });
         break;
       case  'latitude':
@@ -152,7 +152,7 @@ export class GraphComponent implements OnInit {
         break;
       case  'time':
         this.selectedVessel.messages.forEach(value => {
-          this.trace.y.push(Date.parse(value.time) / 1000);
+          this.trace.y.push(Date.parse(value.time) / 1000 - this.selectedVessel.firstAppearance);
         });
         break;
       case  'latitude':
