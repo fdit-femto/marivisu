@@ -70,7 +70,7 @@ export class MapComponent implements OnInit {
           color
         }).addTo(this.map);
     }
-    if (!this.circleMarkers.has(Number(message.mmsi))){
+    if (!this.circleMarkers.has(Number(message.mmsi))) {
       this.circleMarkers.set(Number(message.mmsi), new Array<CircleMarker>());
     }
     this.circleMarkers.get(Number(message.mmsi)).push(circleMarker);
@@ -89,8 +89,11 @@ export class MapComponent implements OnInit {
   }
 
   updateMap(): void {
-    this.circleMarkers.clear();
-    this.vessels.vessels.forEach(((vessel, key) => {
+    this.renderer.remove();
+    this.renderer = L.canvas({padding: 0.5});
+    this.renderer.addTo(this.map);
+    this.circleMarkers.forEach(value => value.splice(0, value.length));
+    this.vessels.vessels.forEach(((vessel) => {
       const color = vessel.getColor();
       vessel.messages.forEach((message) => {
         this.addCircleMarker(message, color);
