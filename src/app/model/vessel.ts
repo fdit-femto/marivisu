@@ -15,7 +15,7 @@ export class Vessel {
 
   getMMSI(): string {
     if (this.messages.length === 0) {
-      return '';
+      return undefined;
     }
     return this.messages[0].mmsi;
   }

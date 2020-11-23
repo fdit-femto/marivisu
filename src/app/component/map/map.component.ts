@@ -17,7 +17,8 @@ export class MapComponent implements OnInit {
   selectedVessel: Vessel;
   public map: L.Map;
   renderer = L.canvas({padding: 0.5});
-  circleMarkers: Map<number, CircleMarker> = new Map<number, CircleMarker>();
+  circleMarkers: Map<number, Array<CircleMarker>> = new Map<number, Array<CircleMarker>>();
+  highlightedMarkerId: number;
 
   constructor(private vesselsService: VesselsService, private selectedVesselService: SelectedVesselService) {
   }
@@ -38,7 +39,10 @@ export class MapComponent implements OnInit {
   connectSelectVesselObservable(): void {
     this.selectedVesselService.currentVessel.subscribe(vessels => {
       this.selectedVessel = vessels;
-      this.updateMap();
+      const mmsi = this.selectedVessel.getMMSI();
+      if (mmsi !== undefined) {
+        this.highlightMarker(Number(this.selectedVessel.getMMSI()));
+      }
     });
   }
 
@@ -58,15 +62,30 @@ export class MapComponent implements OnInit {
           radius: 4,
           color: '#ff0000',
         }).addTo(this.map).bringToFront();
-    }else {
+    } else {
       circleMarker = L.circleMarker([+message.latitude, +message.longitude],
         {
           renderer: this.renderer,
-          radius: 0.01,
+          radius: 1,
           color
         }).addTo(this.map);
     }
-    this.circleMarkers.set(Number(message.mmsi), circleMarker);
+    if (!this.circleMarkers.has(Number(message.mmsi))){
+      this.circleMarkers.set(Number(message.mmsi), new Array<CircleMarker>());
+    }
+    this.circleMarkers.get(Number(message.mmsi)).push(circleMarker);
+  }
+
+  highlightMarker(mmsi: number): void {
+    if (this.highlightedMarkerId !== undefined) {
+      const color = this.vessels.vessels.get(this.highlightedMarkerId).getColor();
+      this.circleMarkers.get(this.highlightedMarkerId).forEach(value => value.setStyle({color, fillColor: color}));
+      this.circleMarkers.get(this.highlightedMarkerId).forEach(value => value.setRadius(1));
+
+    }
+    this.highlightedMarkerId = mmsi;
+    this.circleMarkers.get(mmsi).forEach(value => value.setStyle({fillColor: '#ff0000', color: '#ff0000', fillOpacity: 1}));
+    this.circleMarkers.get(mmsi).forEach(value => value.setRadius(4));
   }
 
   updateMap(): void {
