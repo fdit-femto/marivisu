@@ -54,6 +54,8 @@ export class ImportVesselsComponent implements OnInit {
         const newMessage = new Message(splitLine);
         this.vessels.addMessage(newMessage);
       }
+      this.vessels.sortAllMessageInVesselByDate();
+      this.vessels.sortAllTraceInVesselByDate();
       this.vesselsService.changeVesselsSet(this.vessels);
     };
 

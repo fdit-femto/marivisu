@@ -15,5 +15,11 @@ export class Vessels {
     this.vessels.get(Number(message.mmsi)).addMessage(message);
   }
 
+  sortAllMessageInVesselByDate(): void {
+    this.vessels.forEach(value => value.sortMessageByDate());
+  }
 
+  sortAllTraceInVesselByDate(): void {
+    this.vessels.forEach(value => value.populateTrace());
+  }
 }
