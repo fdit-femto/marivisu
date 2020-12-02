@@ -14,6 +14,7 @@ import {ListVesselComponent} from './list-vessel/list-vessel.component';
 import {AngularSplitModule} from 'angular-split';
 import {PlotlyModule} from 'angular-plotly.js';
 import * as PlotlyJS from 'plotly.js/dist/plotly.js';
+import { ImportVesselPortComponent } from './import-vessel-port/import-vessel-port.component';
 
 PlotlyModule.plotlyjs = PlotlyJS;
 
@@ -26,7 +27,8 @@ PlotlyModule.plotlyjs = PlotlyJS;
     ProgressComponent,
     ImportVesselsComponent,
     ImportVesselsDirective,
-    ListVesselComponent
+    ListVesselComponent,
+    ImportVesselPortComponent
   ],
   imports: [
     BrowserModule,

@@ -6,7 +6,7 @@
     <ul class="navbar-nav">
 
       <li class="nav-item">
-        <a class="nav-link" data-toggle="modal" data-target="#exampleModal" >Import</a>
+        <a class="nav-link" data-toggle="modal" data-target="#dataFileModal" >Import</a>
       </li>
 
       <li class="nav-item dropdown">
@@ -23,12 +23,12 @@
   </div>
 </nav>
 
-<!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<!-- Modal Import data-->
+<div class="modal fade" id="dataFileModal" tabindex="-1" role="dialog" aria-labelledby="dataFileModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Import Vessels</h5>
+        <h5 class="modal-title" id="dataFileModalLabel">Import Vessels</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -43,3 +43,19 @@
   </div>
 </div>
 
+<!-- Modal Import from port-->
+<div class="modal fade" id="portImportData" tabindex="-1" role="dialog" aria-labelledby="portImportDataLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="portImportDataLabel">Import Vessels : Client Configuration</h5>
+      </div>
+      <div class="modal-body">
+        <app-import-vessel-port></app-import-vessel-port>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
