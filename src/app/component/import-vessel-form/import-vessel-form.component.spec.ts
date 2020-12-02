@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ImportVesselPortComponent } from './import-vessel-port.component';
+import { ImportVesselFormComponent } from './import-vessel-form.component';
 
 describe('ImportVesselPortComponent', () => {
-  let component: ImportVesselPortComponent;
-  let fixture: ComponentFixture<ImportVesselPortComponent>;
+  let component: ImportVesselFormComponent;
+  let fixture: ComponentFixture<ImportVesselFormComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ImportVesselPortComponent ]
+      declarations: [ ImportVesselFormComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ImportVesselPortComponent);
+    fixture = TestBed.createComponent(ImportVesselFormComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

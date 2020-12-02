@@ -14,7 +14,8 @@ import {ListVesselComponent} from './list-vessel/list-vessel.component';
 import {AngularSplitModule} from 'angular-split';
 import {PlotlyModule} from 'angular-plotly.js';
 import * as PlotlyJS from 'plotly.js/dist/plotly.js';
-import { ImportVesselPortComponent } from './import-vessel-port/import-vessel-port.component';
+import { ImportVesselFormComponent } from './import-vessel-form/import-vessel-form.component';
+import {FormsModule} from '@angular/forms';
 
 PlotlyModule.plotlyjs = PlotlyJS;
 
@@ -28,14 +29,15 @@ PlotlyModule.plotlyjs = PlotlyJS;
     ImportVesselsComponent,
     ImportVesselsDirective,
     ListVesselComponent,
-    ImportVesselPortComponent
+    ImportVesselFormComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     NgxBootstrapIconsModule.pick(allIcons),
     AngularSplitModule,
-    PlotlyModule
+    PlotlyModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

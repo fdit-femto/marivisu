@@ -1,0 +1,14 @@
+<form (ngSubmit)="onSubmit()" #vesselForm="ngForm">
+  <div class="form-group">
+    <label for="ipAddress">IP Address</label>
+    <input type="text" class="form-control" id="ipAddress"
+           required
+           [(ngModel)]="client.ip" name="name">
+    <label for="port">Port</label>
+    <input type="text" class="form-control" id="port"
+           required
+           [(ngModel)]="client.port" name="name">
+
+  </div>
+  <button type="submit" class="btn btn-success" [disabled]="!vesselForm.form.valid">Start</button>
+</form>
