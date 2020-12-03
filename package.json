@@ -26,6 +26,7 @@
     "bootstrap": "^4.5.3",
     "jquery": "^3.5.1",
     "leaflet": "^1.7.1",
+    "ng-snotify": "^9.0.1",
     "ngx-bootstrap-icons": "^1.2.0",
     "ngx-dropzone": "^2.2.2",
     "ninja-splitter": "^1.1.3",

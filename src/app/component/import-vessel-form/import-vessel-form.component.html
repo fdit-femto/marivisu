@@ -3,12 +3,11 @@
     <label for="ipAddress">IP Address</label>
     <input type="text" class="form-control" id="ipAddress"
            required
-           [(ngModel)]="client.ip" name="name">
+           [(ngModel)]="client.ip" name="name" #name="ngModel">
     <label for="port">Port</label>
-    <input type="text" class="form-control" id="port"
+    <input type="number" class="form-control" id="port"
            required
-           [(ngModel)]="client.port" name="name">
-
+           [(ngModel)]="client.port" name="port">
   </div>
-  <button type="submit" class="btn btn-success" [disabled]="!vesselForm.form.valid">Start</button>
+  <button type="submit" class="btn btn-success" [disabled]="!vesselForm.form.valid" >Start</button>
 </form>

@@ -16,6 +16,7 @@ import {PlotlyModule} from 'angular-plotly.js';
 import * as PlotlyJS from 'plotly.js/dist/plotly.js';
 import { ImportVesselFormComponent } from './import-vessel-form/import-vessel-form.component';
 import {FormsModule} from '@angular/forms';
+import {SnotifyModule, SnotifyService, ToastDefaults} from 'ng-snotify';
 
 PlotlyModule.plotlyjs = PlotlyJS;
 
@@ -37,9 +38,13 @@ PlotlyModule.plotlyjs = PlotlyJS;
     NgxBootstrapIconsModule.pick(allIcons),
     AngularSplitModule,
     PlotlyModule,
-    FormsModule
+    FormsModule,
+    SnotifyModule
   ],
-  providers: [],
+  providers: [
+    { provide: 'SnotifyToastConfig', useValue: ToastDefaults},
+    SnotifyService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {
