@@ -16,7 +16,7 @@ export class ImportVesselFormComponent implements OnInit {
   }
 
   onSubmit(): void {
-    this.snotifyService.success('Example body content', {
+    this.snotifyService.success('Client Started', {
       timeout: 2000,
       showProgressBar: false,
       closeOnClick: false,
