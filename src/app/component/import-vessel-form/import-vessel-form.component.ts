@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
-import {Client} from '../../model/client';
 import {SnotifyService} from 'ng-snotify';
+import {Client} from '../../model/client';
 
 @Component({
   selector: 'app-import-vessel-form',
