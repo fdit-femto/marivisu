@@ -1,25 +1,33 @@
 import {Injectable} from '@angular/core';
+import {Client} from '../model/client';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ClientService {
   net = require('net');
-  client = new this.net.Socket();
+  socket = new this.net.Socket();
+  client: Client;
 
   constructor() {
-    this.client.connect(1337, '127.0.0.1', () => {
+  }
+
+  setClient(client: Client): void {
+    this.client = client;
+    this.connectToServer();
+    this.socketOnData();
+  }
+
+  private connectToServer(): void {
+    this.socket.connect(Number(this.client.port), this.client.ip, () => {
       console.log('Connected');
-      this.client.write('Hello, server! Love, Client.');
-    });
-
-    this.client.on('data', (data) => {
-      console.log('Received: ' + data);
-      this.client.destroy(); // kill client after server's response
-    });
-
-    this.client.on('close', () => {
-      console.log('Connection closed');
     });
   }
+
+  private socketOnData(): void{
+    this.socket.on('data', (data) => {
+      console.log('Received: ' + data);
+    });
+  }
+
 }
