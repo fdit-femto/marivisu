@@ -12,7 +12,8 @@ export class ClientService {
   client: Client;
   private rootURL = '/api';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+  }
 
   getUsers(): Observable<any> {
     return this.http.get(this.rootURL + '/users');
@@ -34,7 +35,7 @@ export class ClientService {
     });
   }
 
-  private socketOnData(): void{
+  private socketOnData(): void {
     this.socket.on('data', (data) => {
       console.log('Received: ' + data);
     });
