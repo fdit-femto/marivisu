@@ -8,37 +8,38 @@ import {Observable} from 'rxjs';
 })
 export class ClientService {
   net = require('net');
-  socket = new this.net.Socket();
   client: Client;
-  private rootURL = '/api';
+  private baseUrl = 'http://127.0.0.1:3800';
 
   constructor(private http: HttpClient) {
   }
 
-  getUsers(): Observable<any> {
-    return this.http.get(this.rootURL + '/users');
-  }
-
-  addUser(user: any): Observable<any> {
-    return this.http.post(this.rootURL + '/user', {user});
-  }
+  // getUsers(): Observable<any> {
+  //   return this.http.get(this.rootURL + '/users');
+  // }
+  //
+  // addUser(user: any): Observable<any> {
+  //   return this.http.post(this.rootURL + '/user', {user});
+  // }
 
   setClient(client: Client): void {
     this.client = client;
     this.connectToServer();
-    this.socketOnData();
   }
 
   private connectToServer(): void {
-    this.socket.connect(Number(this.client.port), this.client.ip, () => {
-      console.log('Connected');
-    });
+    this.http.post(this.baseUrl + '/client/startClient', this.client);
   }
 
-  private socketOnData(): void {
-    this.socket.on('data', (data) => {
-      console.log('Received: ' + data);
-    });
+  getVessels(): Observable<any> {
+    return this.http.get(this.baseUrl + '/client/getmessages');
   }
+
+
+  // private socketOnData(): void {
+  //   this.socket.on('data', (data) => {
+  //     console.log('Received: ' + data);
+  //   });
+  // }
 
 }

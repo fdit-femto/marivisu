@@ -14,10 +14,10 @@ import {ListVesselComponent} from './list-vessel/list-vessel.component';
 import {AngularSplitModule} from 'angular-split';
 import {PlotlyModule} from 'angular-plotly.js';
 import * as PlotlyJS from 'plotly.js/dist/plotly.js';
-import { ImportVesselFormComponent } from './import-vessel-form/import-vessel-form.component';
+import {ImportVesselFormComponent} from './import-vessel-form/import-vessel-form.component';
 import {FormsModule} from '@angular/forms';
 import {SnotifyModule, SnotifyService, ToastDefaults} from 'ng-snotify';
-import {ClientService} from '../service/client.service';
+import { HttpClientModule } from '@angular/common/http';
 
 PlotlyModule.plotlyjs = PlotlyJS;
 
@@ -41,9 +41,10 @@ PlotlyModule.plotlyjs = PlotlyJS;
     PlotlyModule,
     FormsModule,
     SnotifyModule,
+    HttpClientModule
   ],
   providers: [
-    { provide: 'SnotifyToastConfig', useValue: ToastDefaults},
+    {provide: 'SnotifyToastConfig', useValue: ToastDefaults},
     SnotifyService
   ],
   bootstrap: [AppComponent]
