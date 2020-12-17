@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Client} from '../model/client';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Observable} from 'rxjs';
 
 @Injectable({
@@ -21,18 +21,39 @@ export class ClientService {
   // addUser(user: any): Observable<any> {
   //   return this.http.post(this.rootURL + '/user', {user});
   // }
+  private str: string;
 
   setClient(client: Client): void {
     this.client = client;
     this.connectToServer();
   }
 
+  checkStatus(): string {
+    this.http.get(this.baseUrl + '/').subscribe((data: string) => this.str = data);
+    return this.str;
+  }
+
+
   private connectToServer(): void {
-    this.http.post(this.baseUrl + '/client/startClient', this.client);
+    const headers = new HttpHeaders().set('Content-Type', 'application/json');
+
+    this.http.post(this.baseUrl + '/client/startClient',
+      this.client
+      , {headers}).subscribe(
+      val => {
+        console.log('POST call successful value returned in body', val);
+      },
+      response => {
+        console.log('POST call in error', response);
+      },
+      () => {
+        console.log('The POST observable is now completed.');
+      }
+    );
   }
 
   getVessels(): Observable<any> {
-    return this.http.get(this.baseUrl + '/client/getmessages');
+    return this.http.get(this.baseUrl + '/client/getMessages');
   }
 
 
