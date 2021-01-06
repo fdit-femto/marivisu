@@ -1,12 +1,13 @@
 import {Component, OnInit} from '@angular/core';
 import * as L from 'leaflet';
-import {CircleMarker, Polyline} from 'leaflet';
+import {CircleMarker} from 'leaflet';
 import {Vessels} from '../../model/vessels';
 import {VesselsService} from '../../service/vessels.service';
 import {SelectedVesselService} from '../../service/selected-vessel.service';
 import {Vessel} from '../../model/vessel';
 import * as PlotlyJS from 'plotly.js/dist/plotly.js';
-import { PlotlyModule } from 'angular-plotly.js';
+import {PlotlyModule} from 'angular-plotly.js';
+import {Message} from '../../model/message';
 
 PlotlyModule.plotlyjs = PlotlyJS;
 
@@ -20,8 +21,7 @@ export class MapComponent implements OnInit {
   selectedVessel: Vessel;
   // public map: L.Map;
   renderer = L.canvas({padding: 0.5});
-  circleMarkers: Map<number, Array<CircleMarker>> = new Map<number, Array<CircleMarker>>();
-  polylines: Map<number, Polyline> = new Map<number, Polyline>();
+  markers: Map<number, Array<CircleMarker>> = new Map<number, Array<CircleMarker>>();
   highlightedMarkerId: number;
 
   public allData: any[];
@@ -30,21 +30,30 @@ export class MapComponent implements OnInit {
 
   public graph = {
     data: [{
+      name: '',
       type: 'scattermapbox',
-      lat: ['45.5017'],
-      lon: ['-73.5673'],
-      marker: { color: 'fuchsia', size: 4 }
+      text: 'mmsi',
+      lat: [45],
+      lon: [-73],
+      marker: {color: 'fuchsia', size: 14}
+    }, {
+      name: '',
+      legend : 'hide',
+      type: 'scattermapbox',
+      lat: [44],
+      lon: [-72],
+      marker: {color: '#0000FF', size: 3}
     }],
     layout: {
-      style: 'open-street-map',
+      dragmode: 'zoom',
+      margin: {r: 0, t: 0, b: 0, l: 0},
       autosize: true,
       hovermode: 'closest',
+      showlegend: false,
       mapbox: {
+        style: 'open-street-map',
         bearing: 0,
-        center: {
-          lat: 45,
-          lon: -73
-        },
+        center: {lat: 43, lon: -73},
         pitch: 0,
         zoom: 5
       },
@@ -73,23 +82,9 @@ export class MapComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.allData = [];
-    this.allData.push({
-      type: 'scattermapbox',
-      x: [],
-      y: []
-    });
-    this.layout = {
-      dragmode: 'zoom',
-      mapbox: { style: 'open-street-map', center: { lat: 38, lon: -90 }, zoom: 3 },
-      margin: { r: 0, t: 0, b: 0, l: 0 },
-      autosize: true
-    };
-    this.config = {
-      responsive: true
-    };
 
-    // this.initMap();
+
+    this.initMap();
     // this.connectVesselObservable();
     // this.connectSelectVesselObservable();
   }
@@ -112,72 +107,62 @@ export class MapComponent implements OnInit {
   }
 
   initMap(): void {
-    // this.map = L.map('map').setView([0, 0], 1);
-    // L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-    //   attribution: 'map',
-    // }).addTo(this.map);
+    this.allData = [];
+    this.allData.push({
+      type: 'scattermapbox',
+      x: [],
+      y: []
+    });
+    this.layout = {
+      dragmode: 'zoom',
+      mapbox: {style: 'open-street-map', center: {lat: 38, lon: -90}, zoom: 3},
+      margin: {r: 0, t: 0, b: 0, l: 0},
+      autosize: true
+    };
+    this.config = {
+      responsive: true
+    };
+
   }
 
-  // addCircleMarker(message: Message, color: string): void {
-  //   let circleMarker;
-  //   if (message.mmsi === this.selectedVessel.getMMSI()) {
-  //     circleMarker = L.circleMarker([+message.latitude, +message.longitude],
-  //       {
-  //         renderer: this.renderer,
-  //         radius: 4,
-  //         color: '#ff0000',
-  //       }).addTo(this.map).bringToFront();
-  //   } else {
-  //     circleMarker = L.circleMarker([+message.latitude, +message.longitude],
-  //       {
-  //         renderer: this.renderer,
-  //         radius: 1,
-  //         color
-  //       }).addTo(this.map);
-  //   }
-  //   if (!this.circleMarkers.has(Number(message.mmsi))) {
-  //     this.circleMarkers.set(Number(message.mmsi), new Array<CircleMarker>());
-  //   }
-  //   this.circleMarkers.get(Number(message.mmsi)).push(circleMarker);
-  // }
-
-  addPolyline(vessel: Vessel, color: string): void {
-    // let polyline;
-    if (vessel.getMMSI() === this.selectedVessel.getMMSI()) {
-      // polyline = L.polyline(vessel.trace,
+  addCircleMarker(message: Message, color: string): void {
+    // let marker;
+    if (message.mmsi === this.selectedVessel.getMMSI()) {
+      // circleMarker = L.circleMarker([+message.latitude, +message.longitude],
       //   {
       //     renderer: this.renderer,
-      //     weight: 2,
+      //     radius: 4,
       //     color: '#ff0000',
-      //   }).addTo(this.map).bringToFront();
+      //   }).addTo(this.map).bringToFront();>
     } else {
-      // polyline = L.polyline(vessel.trace,
+      // circleMarker = L.circleMarker([+message.latitude, +message.longitude],
       //   {
       //     renderer: this.renderer,
-      //     weight: 1,
+      //     radius: 1,
       //     color
       //   }).addTo(this.map);
     }
-    // this.polylines.set(Number(vessel.getMMSI()), polyline);
+    if (!this.markers.has(Number(message.mmsi))) {
+      this.markers.set(Number(message.mmsi), new Array<CircleMarker>());
+    }
+    // this.markers.get(Number(message.mmsi)).push(circleMarker);
   }
+
 
   highlightMarker(mmsi: number): void {
     if (this.highlightedMarkerId !== undefined) {
       const color = this.vessels.vessels.get(this.highlightedMarkerId).getColor();
-      this.polylines.get(this.highlightedMarkerId).setStyle({color, weight: 1});
     }
     this.highlightedMarkerId = mmsi;
-    this.polylines.get(mmsi).setStyle({color: '#ff0000', weight: 1});
   }
 
   updateMap(): void {
     this.renderer.remove();
     this.renderer = L.canvas({padding: 0.5});
     // this.renderer.addTo(this.map);
-    // this.circleMarkers.forEach(value => value.splice(0, value.length));
+    this.markers.forEach(value => value.splice(0, value.length));
     this.vessels.vessels.forEach(((vessel) => {
       const color = vessel.getColor();
-      this.addPolyline(vessel, color);
     }));
   }
 
