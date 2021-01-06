@@ -9,11 +9,16 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@types/mapbox-gl": "^2.0.0",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "glslify": "^7.1.1",
+    "mapbox-gl": "^2.0.1",
+    "plotly.js": "^1.58.4"
   },
   "devDependencies": {
+    "@types/plotly.js": "^1.54.6",
     "nodemon": "^2.0.6"
   }
 }
