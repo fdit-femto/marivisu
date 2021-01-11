@@ -1,13 +1,10 @@
 import {Component, OnInit} from '@angular/core';
-import * as L from 'leaflet';
-import {CircleMarker} from 'leaflet';
 import {Vessels} from '../../model/vessels';
 import {VesselsService} from '../../service/vessels.service';
 import {SelectedVesselService} from '../../service/selected-vessel.service';
 import {Vessel} from '../../model/vessel';
 import * as PlotlyJS from 'plotly.js/dist/plotly.js';
 import {PlotlyModule} from 'angular-plotly.js';
-import {Message} from '../../model/message';
 
 PlotlyModule.plotlyjs = PlotlyJS;
 
@@ -19,10 +16,10 @@ PlotlyModule.plotlyjs = PlotlyJS;
 export class MapComponent implements OnInit {
   vessels: Vessels;
   selectedVessel: Vessel;
-  // public map: L.Map;
-  renderer = L.canvas({padding: 0.5});
-  markers: Map<number, Array<CircleMarker>> = new Map<number, Array<CircleMarker>>();
-  highlightedMarkerId: number;
+  highlightedMarkerOldCharacteristic = {
+    id: '',
+    color: ''
+  };
 
   public allData: any[];
   public layout: object;
@@ -38,7 +35,7 @@ export class MapComponent implements OnInit {
       marker: {color: 'fuchsia', size: 14}
     }, {
       name: '',
-      legend : 'hide',
+      legend: 'hide',
       type: 'scattermapbox',
       lat: [44],
       lon: [-72],
@@ -53,30 +50,12 @@ export class MapComponent implements OnInit {
       mapbox: {
         style: 'open-street-map',
         bearing: 0,
-        center: {lat: 43, lon: -73},
+        center: {lat: 0, lon: 0},
         pitch: 0,
-        zoom: 5
+        zoom: 1
       },
     },
   };
-
-  // map: mapboxgl.Map;
-  // style = {
-  //   version: 8,
-  //   sources: {
-  //     osm: {
-  //       type: 'raster',
-  //       tiles: ['https://tile.openstreetmap.org/{z}/{x}/{y}.png'],
-  //     }
-  //   },
-  //   layers: [{
-  //     id: 'osm',
-  //     type: 'raster',
-  //     source: 'osm',
-  //   }],
-  // };
-  // lat = 37.75;
-  // lng = -122.41;
 
   constructor(private vesselsService: VesselsService, private selectedVesselService: SelectedVesselService) {
   }
@@ -85,8 +64,8 @@ export class MapComponent implements OnInit {
 
 
     this.initMap();
-    // this.connectVesselObservable();
-    // this.connectSelectVesselObservable();
+    this.connectVesselObservable();
+    this.connectSelectVesselObservable();
   }
 
   connectVesselObservable(): void {
@@ -101,7 +80,7 @@ export class MapComponent implements OnInit {
       this.selectedVessel = vessels;
       const mmsi = this.selectedVessel.getMMSI();
       if (mmsi !== undefined) {
-        this.highlightMarker(Number(this.selectedVessel.getMMSI()));
+        this.highlightMarker(this.selectedVessel.getMMSI());
       }
     });
   }
@@ -125,44 +104,45 @@ export class MapComponent implements OnInit {
 
   }
 
-  addCircleMarker(message: Message, color: string): void {
-    // let marker;
-    if (message.mmsi === this.selectedVessel.getMMSI()) {
-      // circleMarker = L.circleMarker([+message.latitude, +message.longitude],
-      //   {
-      //     renderer: this.renderer,
-      //     radius: 4,
-      //     color: '#ff0000',
-      //   }).addTo(this.map).bringToFront();>
-    } else {
-      // circleMarker = L.circleMarker([+message.latitude, +message.longitude],
-      //   {
-      //     renderer: this.renderer,
-      //     radius: 1,
-      //     color
-      //   }).addTo(this.map);
+  highlightMarker(mmsi: string): void {
+    if (this.highlightedMarkerOldCharacteristic.id !== '') {
+      const previousHighlighted = this.graph.data.find(element => element.text === this.highlightedMarkerOldCharacteristic.id);
+      previousHighlighted.marker.color = this.highlightedMarkerOldCharacteristic.color;
+      previousHighlighted.marker.size = 4;
     }
-    if (!this.markers.has(Number(message.mmsi))) {
-      this.markers.set(Number(message.mmsi), new Array<CircleMarker>());
-    }
-    // this.markers.get(Number(message.mmsi)).push(circleMarker);
-  }
+    const newHighlighted = this.graph.data.find(element => element.text === mmsi);
+    this.highlightedMarkerOldCharacteristic.id = mmsi;
+    this.highlightedMarkerOldCharacteristic.color = newHighlighted.marker.color;
+    newHighlighted.marker.size = 10;
+    newHighlighted.marker.color = 'red';
 
-
-  highlightMarker(mmsi: number): void {
-    if (this.highlightedMarkerId !== undefined) {
-      const color = this.vessels.vessels.get(this.highlightedMarkerId).getColor();
-    }
-    this.highlightedMarkerId = mmsi;
   }
 
   updateMap(): void {
-    this.renderer.remove();
-    this.renderer = L.canvas({padding: 0.5});
-    // this.renderer.addTo(this.map);
-    this.markers.forEach(value => value.splice(0, value.length));
+    this.graph.data = [{
+      name: '',
+      type: 'scattermapbox',
+      text: '',
+      lat: [],
+      lon: [],
+      marker: {color: 'fuchsia', size: 14}
+    }];
+
     this.vessels.vessels.forEach(((vessel) => {
       const color = vessel.getColor();
+      const messagesToDisplay = {
+        name: '',
+        type: 'scattermapbox',
+        text: vessel.getMMSI(),
+        lat: [],
+        lon: [],
+        marker: {color, size: 4}
+      };
+      vessel.messages.forEach((message) => {
+        messagesToDisplay.lat.push(message.latitude);
+        messagesToDisplay.lon.push(message.longitude);
+      });
+      this.graph.data.push(messagesToDisplay);
     }));
   }
 
