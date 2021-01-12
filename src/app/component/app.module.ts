@@ -18,6 +18,7 @@ import {ImportVesselFormComponent} from './import-vessel-form/import-vessel-form
 import {FormsModule} from '@angular/forms';
 import {SnotifyModule, SnotifyService, ToastDefaults} from 'ng-snotify';
 import { HttpClientModule } from '@angular/common/http';
+import { SliderComponent } from './slider/slider.component';
 
 PlotlyModule.plotlyjs = PlotlyJS;
 
@@ -31,7 +32,8 @@ PlotlyModule.plotlyjs = PlotlyJS;
     ImportVesselsComponent,
     ImportVesselsDirective,
     ListVesselComponent,
-    ImportVesselFormComponent
+    ImportVesselFormComponent,
+    SliderComponent
   ],
   imports: [
     BrowserModule,
