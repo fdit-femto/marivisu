@@ -19,6 +19,8 @@ import {FormsModule} from '@angular/forms';
 import {SnotifyModule, SnotifyService, ToastDefaults} from 'ng-snotify';
 import { HttpClientModule } from '@angular/common/http';
 import { SliderComponent } from './slider/slider.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {MatSliderModule} from '@angular/material/slider';
 
 PlotlyModule.plotlyjs = PlotlyJS;
 
@@ -43,7 +45,9 @@ PlotlyModule.plotlyjs = PlotlyJS;
     PlotlyModule,
     FormsModule,
     SnotifyModule,
-    HttpClientModule
+    HttpClientModule,
+    BrowserAnimationsModule,
+    MatSliderModule
   ],
   providers: [
     {provide: 'SnotifyToastConfig', useValue: ToastDefaults},
