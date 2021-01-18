@@ -2,6 +2,7 @@ import {Vessel} from './vessel';
 import {Message} from './message';
 
 export class Vessels {
+  allVessels: Map<number, Vessel>;
   vessels: Map<number, Vessel>;
   firstAppearance: number;
   lastAppearance: number;
@@ -49,8 +50,10 @@ export class Vessels {
   getVesselSetRegardingTime(time: number): Vessels {
     const vesselsSet: Vessels = new Vessels();
     this.vessels.forEach(value => {
-      const newVessel = value.getVesselSetRegardingTime(time);
-      vesselsSet.addVessel(newVessel);
+      const newVessel = value.getVesselSetRegardingTime(time + this.firstAppearance);
+      if (newVessel !== undefined) {
+        vesselsSet.addVessel(newVessel);
+      }
     });
 
     return vesselsSet;

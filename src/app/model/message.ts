@@ -1,6 +1,7 @@
 export class Message {
   mmsi: string;
   time: string;
+  relaiveTimeInS: number;
   latitude: string;
   longitude: string;
   speedOverGround: string;
@@ -39,4 +40,5 @@ export class Message {
   getTimeInS(): number {
     return Date.parse(this.time) / 1000;
   }
+
 }

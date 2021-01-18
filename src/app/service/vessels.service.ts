@@ -6,7 +6,14 @@ import {Vessels} from '../model/vessels';
   providedIn: 'root'
 })
 export class VesselsService {
-  private allVessels: Vessels;
+  private firstAppearance: number;
+  private lastAppearance: number;
+  // tslint:disable-next-line:variable-name
+  private _allVessels: Vessels;
+  get allVessels(): Vessels {
+    return this._allVessels;
+  }
+
   private vessels = new BehaviorSubject(new Vessels());
   currentVessels = this.vessels.asObservable();
 
@@ -14,15 +21,19 @@ export class VesselsService {
   }
 
   changeAllVesselsSet(newVessels: Vessels): void {
-    this.allVessels = newVessels;
+    this.firstAppearance = newVessels.firstAppearance;
+    this.lastAppearance = newVessels.lastAppearance;
+    this._allVessels = newVessels;
     this.vessels.next(newVessels);
   }
 
   displayAllVessels(): void {
-    this.vessels.next(this.allVessels);
+    this.vessels.next(this._allVessels);
   }
 
   changeTimeSelectedVessel(newVessels: Vessels): void {
+    newVessels.firstAppearance = this.firstAppearance;
+    newVessels.lastAppearance = this.lastAppearance;
     this.vessels.next(newVessels);
   }
 }

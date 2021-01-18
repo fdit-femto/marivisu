@@ -44,6 +44,6 @@ export class SliderComponent implements OnInit {
   }
 
   onInputChange($event: MatSliderChange): void {
-    this.vesselsService.changeTimeSelectedVessel(this.vessels.getVesselSetRegardingTime($event.value));
+    this.vesselsService.changeTimeSelectedVessel(this.vesselsService.allVessels.getVesselSetRegardingTime($event.value));
   }
 }

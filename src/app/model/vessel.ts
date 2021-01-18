@@ -6,6 +6,8 @@ export class Vessel {
   trace: Array<LatLng> = new Array<LatLng>();
   firstAppearance: number;
   currentSelectedMessageIndex = 0;
+  private indexIncrease = true;
+  private previousIndexIncreaseValue = true;
 
   constructor(messages: Array<Message>) {
     this.messages = messages;
@@ -55,43 +57,47 @@ export class Vessel {
   getVesselSetRegardingTime(time: number): Vessel {
     let resultVessel: Vessel = null;
     while (resultVessel == null) {
-      resultVessel = this.getMessageIfJustBefore(time);
+      resultVessel = this.getMessageInRange(time);
       this.nextIndex(time);
+      if (this.previousIndexIncreaseValue !== this.indexIncrease ||
+        this.currentSelectedMessageIndex === 0 || this.currentSelectedMessageIndex >= this.messages.length - 1) {
+        break;
+      }
     }
+    this.previousIndexIncreaseValue = this.indexIncrease;
     return resultVessel;
   }
 
-  private getMessageIfJustBefore(time: number): Vessel {
-    if (this.isMessageJustBefore(time)) {
-      return new Vessel(new Array<Message>(this.messages[this.currentSelectedMessageIndex]));
-    } else {
-      return null;
-    }
-  }
 
   private nextIndex(time: number): void {
     if (this.isMessageBefore(time)) {
+      this.indexIncrease = false;
       this.currentSelectedMessageIndex--;
       if (this.currentSelectedMessageIndex < 0) {
         this.currentSelectedMessageIndex = 0;
       }
     } else {
+      this.indexIncrease = true;
       this.currentSelectedMessageIndex++;
-      if (this.currentSelectedMessageIndex > this.messages.length) {
-        this.currentSelectedMessageIndex = this.messages.length;
+      if (this.currentSelectedMessageIndex >= this.messages.length) {
+        this.currentSelectedMessageIndex = this.messages.length - 1;
       }
     }
   }
 
-  private isMessageJustBefore(time: number): boolean {
-    if (this.currentSelectedMessageIndex + 1 >= this.messages.length) {
-      return true;
+  private getMessageInRange(time: number): Vessel {
+    if (this.isMessageInRange(time)) {
+      return new Vessel(new Array<Message>(this.messages[this.currentSelectedMessageIndex]));
     }
-    return this.messages[this.currentSelectedMessageIndex + 1].getTimeInS() > time &&
-      this.messages[this.currentSelectedMessageIndex].getTimeInS() < time;
+  }
+
+  private isMessageInRange(time: number): boolean {
+    return this.messages[this.currentSelectedMessageIndex].getTimeInS() < time + 100 &&
+      this.messages[this.currentSelectedMessageIndex].getTimeInS() > time - 100;
   }
 
   private isMessageBefore(time: number): boolean {
-    return this.messages[this.currentSelectedMessageIndex].getTimeInS() < time;
+    return this.messages[this.currentSelectedMessageIndex].getTimeInS() > time;
   }
+
 }
