@@ -35,4 +35,8 @@ export class Message {
     this.draft = splitLine[14];
     this.cargo = splitLine[15];
   }
+
+  getTimeInS(): number {
+    return Date.parse(this.time) / 1000;
+  }
 }

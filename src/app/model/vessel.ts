@@ -5,6 +5,7 @@ export class Vessel {
   messages: Array<Message>;
   trace: Array<LatLng> = new Array<LatLng>();
   firstAppearance: number;
+  currentSelectedMessageIndex = 0;
 
   constructor(messages: Array<Message>) {
     this.messages = messages;
@@ -40,15 +41,57 @@ export class Vessel {
     return this.messages[0].vesselName;
   }
 
-  public getColor(): string {
+  getColor(): string {
     return '#' + (+this.getMMSI()).toString(16).substr(0, 6);
   }
 
-  determineFirstAppearance(message: Message): void {
-    const timeInS = Date.parse(message.time) / 1000;
+  private determineFirstAppearance(message: Message): void {
+    const timeInS = message.getTimeInS();
     if (this.firstAppearance === undefined || this.firstAppearance > timeInS) {
       this.firstAppearance = timeInS;
     }
   }
 
+  getVesselSetRegardingTime(time: number): Vessel {
+    let resultVessel: Vessel = null;
+    while (resultVessel == null) {
+      resultVessel = this.getMessageIfJustBefore(time);
+      this.nextIndex(time);
+    }
+    return resultVessel;
+  }
+
+  private getMessageIfJustBefore(time: number): Vessel {
+    if (this.isMessageJustBefore(time)) {
+      return new Vessel(new Array<Message>(this.messages[this.currentSelectedMessageIndex]));
+    } else {
+      return null;
+    }
+  }
+
+  private nextIndex(time: number): void {
+    if (this.isMessageBefore(time)) {
+      this.currentSelectedMessageIndex--;
+      if (this.currentSelectedMessageIndex < 0) {
+        this.currentSelectedMessageIndex = 0;
+      }
+    } else {
+      this.currentSelectedMessageIndex++;
+      if (this.currentSelectedMessageIndex > this.messages.length) {
+        this.currentSelectedMessageIndex = this.messages.length;
+      }
+    }
+  }
+
+  private isMessageJustBefore(time: number): boolean {
+    if (this.currentSelectedMessageIndex + 1 >= this.messages.length) {
+      return true;
+    }
+    return this.messages[this.currentSelectedMessageIndex + 1].getTimeInS() > time &&
+      this.messages[this.currentSelectedMessageIndex].getTimeInS() < time;
+  }
+
+  private isMessageBefore(time: number): boolean {
+    return this.messages[this.currentSelectedMessageIndex].getTimeInS() < time;
+  }
 }

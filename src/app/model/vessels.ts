@@ -31,4 +31,29 @@ export class Vessels {
   sortAllTraceInVesselByDate(): void {
     this.vessels.forEach(value => value.populateTrace());
   }
+
+  determineFirstAppearance(message: Message): void {
+    const timeInS = Date.parse(message.time) / 1000;
+    if (this.firstAppearance === undefined || this.firstAppearance > timeInS) {
+      this.firstAppearance = timeInS;
+    }
+  }
+
+  determineLastAppearance(message: Message): void {
+    const timeInS = Date.parse(message.time) / 1000;
+    if (this.lastAppearance === undefined || this.lastAppearance < timeInS) {
+      this.lastAppearance = timeInS;
+    }
+  }
+
+  getVesselSetRegardingTime(time: number): Vessels {
+    const vesselsSet: Vessels = new Vessels();
+    this.vessels.forEach(value => {
+      const newVessel = value.getVesselSetRegardingTime(time);
+      vesselsSet.addVessel(newVessel);
+    });
+
+    return vesselsSet;
+  }
+
 }

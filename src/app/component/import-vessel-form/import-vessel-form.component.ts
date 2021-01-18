@@ -38,14 +38,14 @@ export class ImportVesselFormComponent implements OnInit {
     }
     this.vessels.sortAllMessageInVesselByDate();
     this.vessels.sortAllTraceInVesselByDate();
-    this.vesselsService.changeVesselsSet(this.vessels);
+    this.vesselsService.changeAllVesselsSet(this.vessels);
   }
 
   onSubmit(): void {
     let vesselsString = '';
     this.clientService.setClient(this.client);
     this.vessels = new Vessels();
-    this.vesselsService.changeVesselsSet(this.vessels);
+    this.vesselsService.changeAllVesselsSet(this.vessels);
     this.interval = interval(1000);
     this.requestSender = interval(1000).subscribe(() => {
       this.clientService.getVessels().subscribe((data: string) => vesselsString = data);

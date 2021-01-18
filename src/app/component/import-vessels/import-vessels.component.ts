@@ -34,7 +34,7 @@ export class ImportVesselsComponent implements OnInit {
       return;
     }
     this.vessels = new Vessels();
-    this.vesselsService.changeVesselsSet(this.vessels);
+    this.vesselsService.changeAllVesselsSet(this.vessels);
     this.files.splice(index, 1);
   }
 
@@ -56,7 +56,7 @@ export class ImportVesselsComponent implements OnInit {
       }
       this.vessels.sortAllMessageInVesselByDate();
       this.vessels.sortAllTraceInVesselByDate();
-      this.vesselsService.changeVesselsSet(this.vessels);
+      this.vesselsService.changeAllVesselsSet(this.vessels);
     };
 
     fileReader.onprogress = (e) => {

@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { VesselSelected } from './vessel-selected.service';
+import { TimeSelectedVessel } from './time-selected-vessel.service';
 
 describe('VesselToPlayService', () => {
-  let service: VesselSelected;
+  let service: TimeSelectedVessel;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(VesselSelected);
+    service = TestBed.inject(TimeSelectedVessel);
   });
 
   it('should be created', () => {
