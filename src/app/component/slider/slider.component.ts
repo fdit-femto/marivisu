@@ -16,6 +16,7 @@ export class SliderComponent implements OnInit {
   value = 0;
   disabled = false;
   color: ThemePalette = 'primary';
+  private sliderValue = 0;
 
   constructor(private vesselsService: VesselsService) {
     this.vesselsService.currentVessels.subscribe(vessels => {
@@ -39,7 +40,16 @@ export class SliderComponent implements OnInit {
   }
 
   onInputChange($event: MatSliderChange): void {
+    this.sliderValue = $event.value;
     this.vesselsService.changeTimeSelectedVessel(this.vesselsService.allVessels.getVesselSetRegardingTime($event.value));
   }
 
+  onSlideChange(): void {
+    if (this.disabled) {
+      this.vesselsService.changeTimeSelectedVessel(this.vesselsService.allVessels.getVesselSetRegardingTime(this.sliderValue));
+    } else {
+      this.vesselsService.displayAllVessels();
+    }
+
+  }
 }
