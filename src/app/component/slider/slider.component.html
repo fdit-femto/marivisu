@@ -1,9 +1,17 @@
+<mat-slide-toggle
+  class="margin-slid"
+  [color]="color"
+  [(ngModel)]="disabled">
+</mat-slide-toggle>
+
 <mat-slider
   #mySlider
+  class="margin-slider"
   thumbLabel
   [displayWith]="formatLabel"
   tickInterval="1000"
   min="0"
+  [disabled]=!disabled
   [(ngModel)]="value"
   (input)="onInputChange($event)"
   [max]="this.max"></mat-slider>

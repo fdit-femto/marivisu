@@ -21,6 +21,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { SliderComponent } from './slider/slider.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatSliderModule} from '@angular/material/slider';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 
 PlotlyModule.plotlyjs = PlotlyJS;
 
@@ -47,7 +48,8 @@ PlotlyModule.plotlyjs = PlotlyJS;
     SnotifyModule,
     HttpClientModule,
     BrowserAnimationsModule,
-    MatSliderModule
+    MatSliderModule,
+    MatSlideToggleModule
   ],
   providers: [
     {provide: 'SnotifyToastConfig', useValue: ToastDefaults},

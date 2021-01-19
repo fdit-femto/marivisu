@@ -1,6 +1,10 @@
 
-mat-slider {
-  margin-top: 20px;
+.margin-slider {
+  width: 300px;
+}
+
+.margin-slid {
+  margin: 20px 20px 0 20px;
   width: 300px;
 }
 
@@ -13,3 +17,4 @@ mat-slider {
 ::ng-deep .mat-accent .mat-slider-track-fill {
   background-color: grey;
 }
+

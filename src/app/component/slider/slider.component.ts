@@ -2,6 +2,7 @@ import {Component, Input, OnInit} from '@angular/core';
 import {VesselsService} from '../../service/vessels.service';
 import {Vessels} from '../../model/vessels';
 import {MatSliderChange} from '@angular/material/slider';
+import {ThemePalette} from '@angular/material/core';
 
 @Component({
   selector: 'app-slider',
@@ -13,6 +14,8 @@ export class SliderComponent implements OnInit {
   @Input()
   max = 0;
   value = 0;
+  disabled = false;
+  color: ThemePalette = 'primary';
 
   constructor(private vesselsService: VesselsService) {
     this.vesselsService.currentVessels.subscribe(vessels => {
@@ -38,4 +41,5 @@ export class SliderComponent implements OnInit {
   onInputChange($event: MatSliderChange): void {
     this.vesselsService.changeTimeSelectedVessel(this.vesselsService.allVessels.getVesselSetRegardingTime($event.value));
   }
+
 }
