@@ -59,4 +59,8 @@ export class Vessels {
     return vesselsSet;
   }
 
+  getVessel(mmsi: number): Vessel {
+    return this.vessels.get(mmsi);
+  }
+
 }
