@@ -1,7 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {VesselsService} from '../../service/vessels.service';
 import {Vessels} from '../../model/vessels';
-import {TimeSelectedVessel} from '../../service/time-selected-vessel.service';
 import {MatSliderChange} from '@angular/material/slider';
 
 @Component({
@@ -11,12 +10,11 @@ import {MatSliderChange} from '@angular/material/slider';
 })
 export class SliderComponent implements OnInit {
   vessels: Vessels;
-  timeSelectedVessels: Vessels;
   @Input()
   max = 0;
   value = 0;
 
-  constructor(private vesselsService: VesselsService, private timeSelectedVesselService: TimeSelectedVessel) {
+  constructor(private vesselsService: VesselsService) {
     this.vesselsService.currentVessels.subscribe(vessels => {
       setTimeout(() => {
           this.vessels = vessels;
@@ -24,13 +22,7 @@ export class SliderComponent implements OnInit {
         }
       );
     });
-    this.timeSelectedVesselService.currentVessels.subscribe(vessels => {
-      setTimeout(() => {
-          this.timeSelectedVessels = vessels;
-          this.max = this.vessels.lastAppearance - this.vessels.firstAppearance;
-        }
-      );
-    });
+
   }
 
   ngOnInit(): void {
