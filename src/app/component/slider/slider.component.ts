@@ -13,7 +13,7 @@ export class SliderComponent implements OnInit {
   vessels: Vessels;
   timeSelectedVessels: Vessels;
   @Input()
-  max = 200;
+  max = 0;
   value = 0;
 
   constructor(private vesselsService: VesselsService, private timeSelectedVesselService: TimeSelectedVessel) {
