@@ -26,21 +26,7 @@ export class MapComponent implements OnInit {
   public config: object;
 
   public graph = {
-    data: [{
-      name: '',
-      type: 'scattermapbox',
-      text: 'mmsi',
-      lat: [45],
-      lon: [-73],
-      marker: {color: 'fuchsia', size: 14}
-    }, {
-      name: '',
-      legend: 'hide',
-      type: 'scattermapbox',
-      lat: [44],
-      lon: [-72],
-      marker: {color: '#0000FF', size: 3}
-    }],
+    data: [],
     layout: {
       dragmode: 'zoom',
       margin: {r: 0, t: 0, b: 0, l: 0},
