@@ -39,7 +39,7 @@ export class GraphComponent implements OnInit {
   }
 
   connectSelectVesselObservable(): void {
-    this.selectedVesselService.currentVessel.subscribe(vessels => {
+    this.selectedVesselService.currentVesselAllMessages.subscribe(vessels => {
       this.selectedVessel = vessels;
       this.initGraph();
     });

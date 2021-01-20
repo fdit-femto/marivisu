@@ -60,7 +60,13 @@ export class Vessels {
   }
 
   getVessel(mmsi: number): Vessel {
-    return this.vessels.get(mmsi);
+    let vessel: Vessel = this.vessels.get(Number(mmsi));
+
+    if (vessel === undefined) {
+      vessel = new Vessel(new Array<Message>());
+    }
+
+    return vessel;
   }
 
 }

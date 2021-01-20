@@ -12,7 +12,8 @@ export class SelectedVesselService {
   get mmsi(): number {
     return this._mmsi;
   }
-
+  private selectedVesselAllMessages = new BehaviorSubject(new Vessel(new Array<Message>()));
+  currentVesselAllMessages = this.selectedVesselAllMessages.asObservable();
   private selectedVessel = new BehaviorSubject(new Vessel(new Array<Message>()));
   currentVessel = this.selectedVessel.asObservable();
 
@@ -22,7 +23,10 @@ export class SelectedVesselService {
   changeVesselSet(newVessel: Vessel): void {
     this._mmsi = newVessel.getMMSI();
     this.selectedVessel.next(newVessel);
+    this.selectedVesselAllMessages.next(newVessel);
   }
+
+
 
   changeVesselSetSlider(newVessels: Vessel): void {
     this.selectedVessel.next(newVessels);

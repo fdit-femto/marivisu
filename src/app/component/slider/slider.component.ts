@@ -57,7 +57,7 @@ export class SliderComponent implements OnInit {
     this.sliderValue = $event.value;
     const newVessels: Vessels = this.vesselsService.allVessels.getVesselSetRegardingTime($event.value);
     this.vesselsService.changeTimeSelectedVessel(newVessels);
-    this.selectedVesselService.changeVesselSet(newVessels.getVessel(Number(this.selectedVessel.getMMSI())));
+    this.selectedVesselService.changeVesselSetSlider(newVessels.getVessel(Number(this.selectedVessel.getMMSI())));
   }
 
   onSlideChange(): void {
@@ -67,7 +67,7 @@ export class SliderComponent implements OnInit {
       this.selectedVesselService.changeVesselSetSlider(newVessels.getVessel(Number(this.selectedVessel.getMMSI())));
     } else {
       this.vesselsService.displayAllVessels();
-      this.selectedVesselService.changeVesselSetSlider(this.vessels.getVessel(this.sliderValue));
+      this.selectedVesselService.changeVesselSetSlider(this.vesselsService.allVessels.getVessel(this.selectedVesselService.mmsi));
     }
 
   }
