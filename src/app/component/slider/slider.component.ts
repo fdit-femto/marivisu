@@ -21,6 +21,7 @@ export class SliderComponent implements OnInit {
   disabled = false;
   color: ThemePalette = 'primary';
   private sliderValue = 0;
+  toggleDisable: boolean;
 
   constructor(private vesselsService: VesselsService, private selectedVesselService: SelectedVesselService) {
   }
@@ -36,6 +37,7 @@ export class SliderComponent implements OnInit {
       setTimeout(() => {
           this.vessels = vessels;
           this.max = this.vessels.lastAppearance - this.vessels.firstAppearance;
+          this.toggleDisable = this.vessels.vessels.size === 0;
         }
       );
     });

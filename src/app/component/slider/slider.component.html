@@ -2,7 +2,8 @@
   class="margin-slid"
   [color]="color"
   (change)="onSlideChange()"
-  [(ngModel)]="disabled">
+  [(ngModel)]="disabled"
+  [disabled]=toggleDisable>
 </mat-slide-toggle>
 
 <mat-slider
