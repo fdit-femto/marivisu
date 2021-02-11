@@ -49,7 +49,7 @@ PlotlyModule.plotlyjs = PlotlyJS;
     HttpClientModule,
     BrowserAnimationsModule,
     MatSliderModule,
-    MatSlideToggleModule,
+    MatSlideToggleModule
   ],
   providers: [
     {provide: 'SnotifyToastConfig', useValue: ToastDefaults},
