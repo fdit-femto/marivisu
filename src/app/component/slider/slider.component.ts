@@ -28,7 +28,9 @@ export class SliderComponent implements OnInit {
 
   private connectSelectVesselObservable(): void {
     this.selectedVesselService.currentVessel.subscribe(vessels => {
-      this.selectedVessel = vessels;
+      if (vessels.messages.length !== 0) {
+        this.selectedVessel = vessels;
+      }
     });
   }
 
