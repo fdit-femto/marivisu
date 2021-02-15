@@ -93,8 +93,10 @@ export class MapComponent implements OnInit {
   highlightMarker(mmsi: string): void {
     if (this.highlightedMarkerOldCharacteristic.id !== '') {
       const previousHighlighted = this.graph.data.find(element => element.text === this.highlightedMarkerOldCharacteristic.id);
-      previousHighlighted.marker.color = this.highlightedMarkerOldCharacteristic.color;
-      previousHighlighted.marker.size = 4;
+      if (previousHighlighted !== undefined) {
+        previousHighlighted.marker.color = this.highlightedMarkerOldCharacteristic.color;
+        previousHighlighted.marker.size = 4;
+      }
     }
     const newHighlighted = this.graph.data.find(element => element.text === mmsi);
     this.highlightedMarkerOldCharacteristic.id = mmsi;
