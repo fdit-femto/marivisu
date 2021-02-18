@@ -1,10 +1,23 @@
 export class CsvStructure {
+  private mmsiIndex: number;
+  private timeIndex: number;
+  private latitudeIndex: number;
+  private longitudeIndex: number;
+  private speedOverGroundIndex: number;
+  private courseOverGroundIndex: number;
+  private headingIndex: number;
+  private vesselNameIndex: number;
+  private imoIndex: number;
+  private callSignIndex: number;
+  private vesselTypeIndex: number;
+  private statusIndex: number;
+  private lengthIndex: number;
+  private widthIndex: number;
+  private draftIndex: number;
+  private cargoIndex: number;
+
   constructor(private splitLine: string[],
-              private mmsiIndex: number, private timeIndex: number, private relaiveTimeInSIndex: number, private latitudeIndex: number,
-              private longitudeIndex: number, private speedOverGroundIndex: number, private courseOverGroundIndex: number,
-              private headingIndex: number, private vesselNameIndex: number, private imoIndex: number, private callSignIndex: number,
-              private vesselTypeIndex: number, private statusIndex: number, private lengthIndex: number, private widthIndex: number,
-              private draftIndex: number, private cargoIndex: number) {
+  ) {
     for (let i = 0; i < splitLine.length - 1; i++) {
       this.affectElement(splitLine[i], i);
     }
@@ -19,40 +32,40 @@ export class CsvStructure {
         this.timeIndex = index;
         break;
       case 'LAT':
-        this.relaiveTimeInSIndex = index;
-        break;
-      case 'LON':
         this.latitudeIndex = index;
         break;
-      case 'SOG':
+      case 'LON':
         this.longitudeIndex = index;
         break;
-      case 'COG':
+      case 'SOG':
         this.speedOverGroundIndex = index;
         break;
-      case 'Heading':
+      case 'COG':
         this.courseOverGroundIndex = index;
         break;
-      case 'VesselName':
+      case 'Heading':
         this.headingIndex = index;
         break;
-      case  'IMO':
+      case 'VesselName':
         this.vesselNameIndex = index;
         break;
-      case  'CallSign':
+      case  'IMO':
         this.imoIndex = index;
         break;
-      case  'VesselType':
+      case  'CallSign':
         this.callSignIndex = index;
         break;
-      case  'Status':
+      case  'VesselType':
         this.vesselTypeIndex = index;
         break;
-      case  'Length':
+      case  'Status':
         this.statusIndex = index;
         break;
-      case  'Width':
+      case  'Length':
         this.lengthIndex = index;
+        break;
+      case  'Width':
+        this.widthIndex = index;
         break;
       case  'Draft':
         this.draftIndex = index;
