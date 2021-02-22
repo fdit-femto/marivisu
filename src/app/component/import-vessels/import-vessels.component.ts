@@ -26,10 +26,6 @@ export class ImportVesselsComponent implements OnInit {
     this.prepareFilesList($event);
   }
 
-  fileBrowseHandler(files): void {
-    this.prepareFilesList(files);
-  }
-
   deleteFile(index: number): void {
     if (this.files[index].progress < 100) {
       return;
@@ -42,6 +38,7 @@ export class ImportVesselsComponent implements OnInit {
   uploadFiles(index: number): void {
     const fileReader = new FileReader();
     let nbLine: number;
+    let csvStructure: CsvStructure;
     fileReader.onload = () => {
       this.vessels = new Vessels();
       const lines: string[] = (fileReader.result as string).split('\n');
@@ -50,11 +47,10 @@ export class ImportVesselsComponent implements OnInit {
         line = line.replace(/[^\x20-\x7F]/g, '');
         const splitLine = line.split(',');
         if (isNaN(Number(splitLine[0])) || line === '') {
-
-          csvStructure = new CsvStructure();
+          csvStructure = new CsvStructure(splitLine);
           continue;
         }
-        const newMessage = new Message(splitLine);
+        const newMessage = new Message(splitLine, csvStructure);
         this.vessels.addMessage(newMessage);
       }
       this.vessels.sortAllMessageInVesselByDate();
@@ -71,17 +67,10 @@ export class ImportVesselsComponent implements OnInit {
     fileReader.readAsText(this.files[index]);
   }
 
-
-
-  prepareFilesList(files: Array<any>): void {
-    this.files = [];
-    for (const item of files) {
-      item.progress = 0;
-      this.files.push(item);
-    }
-    this.fileDropEl.nativeElement.value = '';
-    this.uploadFiles(0);
+  fileBrowseHandler(files): void {
+    this.prepareFilesList(files);
   }
+
 
   formatBytes(bytes, decimals = 2): string {
     if (bytes === 0) {
@@ -92,5 +81,15 @@ export class ImportVesselsComponent implements OnInit {
     const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
     return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+  }
+
+  prepareFilesList(files: Array<any>): void {
+    this.files = [];
+    for (const item of files) {
+      item.progress = 0;
+      this.files.push(item);
+    }
+    this.fileDropEl.nativeElement.value = '';
+    this.uploadFiles(0);
   }
 }

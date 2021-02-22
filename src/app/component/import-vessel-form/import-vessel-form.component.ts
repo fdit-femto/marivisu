@@ -6,6 +6,7 @@ import {VesselsService} from '../../service/vessels.service';
 import {Vessels} from '../../model/vessels';
 import {interval, Observable} from 'rxjs';
 import {Message} from '../../model/message';
+import {CsvStructure} from '../../model/csv-structure';
 
 @Component({
   selector: 'app-import-vessel-form',
@@ -27,14 +28,16 @@ export class ImportVesselFormComponent implements OnInit {
   private addVessels(vesselsString: string): void {
     this.vessels = new Vessels();
     const lines: string[] = vesselsString.split('\n');
+    let csvStructure: CsvStructure;
     for (let line of lines) {
       line = line.replace(/[^\x20-\x7F]/g, '');
       const splitLine = line.split(',');
       if (isNaN(Number(splitLine[0])) || line === '') {
-        continue;
+        csvStructure = new CsvStructure(splitLine);
+      }else {
+        const newMessage = new Message(splitLine, csvStructure);
+        this.vessels.addMessage(newMessage);
       }
-      const newMessage = new Message(splitLine);
-      this.vessels.addMessage(newMessage);
     }
     this.vessels.sortAllMessageInVesselByDate();
     this.vessels.sortAllTraceInVesselByDate();
