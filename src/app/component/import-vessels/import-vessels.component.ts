@@ -2,6 +2,7 @@ import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {VesselsService} from '../../service/vessels.service';
 import {Message} from '../../model/message';
 import {Vessels} from '../../model/vessels';
+import {CsvStructure} from '../../model/csv-structure';
 
 @Component({
   selector: 'app-import-vessels',
@@ -49,6 +50,8 @@ export class ImportVesselsComponent implements OnInit {
         line = line.replace(/[^\x20-\x7F]/g, '');
         const splitLine = line.split(',');
         if (isNaN(Number(splitLine[0])) || line === '') {
+
+          csvStructure = new CsvStructure();
           continue;
         }
         const newMessage = new Message(splitLine);
@@ -67,6 +70,8 @@ export class ImportVesselsComponent implements OnInit {
 
     fileReader.readAsText(this.files[index]);
   }
+
+
 
   prepareFilesList(files: Array<any>): void {
     this.files = [];
