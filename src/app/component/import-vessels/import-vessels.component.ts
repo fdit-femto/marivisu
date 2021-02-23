@@ -22,8 +22,20 @@ export class ImportVesselsComponent implements OnInit {
     this.vesselsService.currentVessels.subscribe(vessels => this.vessels = vessels);
   }
 
-  onFileDropped($event): void {
-    this.prepareFilesList($event);
+
+  fileBrowseHandler(files): void {
+    this.prepareFilesList(files);
+  }
+
+  formatBytes(bytes, decimals = 2): string {
+    if (bytes === 0) {
+      return '0 Bytes';
+    }
+    const k = 1024;
+    const dm = decimals <= 0 ? 0 : decimals;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
   }
 
   deleteFile(index: number): void {
@@ -35,14 +47,29 @@ export class ImportVesselsComponent implements OnInit {
     this.files.splice(index, 1);
   }
 
+
+  onFileDropped($event): void {
+    this.prepareFilesList($event);
+  }
+
+  prepareFilesList(files: Array<any>): void {
+    this.files = [];
+    for (const item of files) {
+      item.progress = 0;
+      this.files.push(item);
+    }
+    this.fileDropEl.nativeElement.value = '';
+    this.uploadFiles(0);
+  }
+
   uploadFiles(index: number): void {
-    const fileReader = new FileReader();
     let nbLine: number;
     let csvStructure: CsvStructure;
+    const fileReader = new FileReader();
     fileReader.onload = () => {
-      this.vessels = new Vessels();
       const lines: string[] = (fileReader.result as string).split('\n');
       nbLine = lines.length;
+      this.vessels = new Vessels();
       for (let line of lines) {
         line = line.replace(/[^\x20-\x7F]/g, '');
         const splitLine = line.split(',');
@@ -65,31 +92,5 @@ export class ImportVesselsComponent implements OnInit {
     };
 
     fileReader.readAsText(this.files[index]);
-  }
-
-  fileBrowseHandler(files): void {
-    this.prepareFilesList(files);
-  }
-
-
-  formatBytes(bytes, decimals = 2): string {
-    if (bytes === 0) {
-      return '0 Bytes';
-    }
-    const k = 1024;
-    const dm = decimals <= 0 ? 0 : decimals;
-    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
-  }
-
-  prepareFilesList(files: Array<any>): void {
-    this.files = [];
-    for (const item of files) {
-      item.progress = 0;
-      this.files.push(item);
-    }
-    this.fileDropEl.nativeElement.value = '';
-    this.uploadFiles(0);
   }
 }
