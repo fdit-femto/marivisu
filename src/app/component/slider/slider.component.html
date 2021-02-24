@@ -18,3 +18,16 @@
   (input)="onInputChange($event)"
   [max]="this.max"></mat-slider>
 
+<div class="replay_control">
+  <button mat-icon-button color="black" [disabled]=!disabled>
+    <mat-icon>fast_rewind</mat-icon>
+  </button>
+  <button mat-icon-button color="primary" [disabled]=!disabled>
+    <mat-icon>play_arrow</mat-icon>
+  </button>
+  <button mat-icon-button color="primary" [disabled]=!disabled>
+    <mat-icon>fast_forward</mat-icon>
+  </button>
+</div>
+
+
