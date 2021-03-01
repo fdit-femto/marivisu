@@ -20,7 +20,6 @@ export class SliderComponent implements OnInit {
   value = 0;
   disabled = false;
   color: ThemePalette = 'primary';
-  private sliderValue = 0;
   toggleDisable: boolean;
 
   constructor(private vesselsService: VesselsService, private selectedVesselService: SelectedVesselService) {
@@ -45,11 +44,6 @@ export class SliderComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {
-    this.connectSelectVesselObservable();
-    this.connectVesselObservable();
-  }
-
   formatLabel(value: number): string | number {
     if (value >= 1000) {
       return Math.round(value / 1000) + 'k';
@@ -57,16 +51,9 @@ export class SliderComponent implements OnInit {
     return value;
   }
 
-  onInputChange($event: MatSliderChange): void {
-    this.sliderValue = $event.value;
-    const newVessels: Vessels = this.vesselsService.allVessels.getVesselSetRegardingTime($event.value);
-    this.vesselsService.changeTimeSelectedVessel(newVessels);
-    this.selectedVesselService.changeVesselSetSlider(newVessels.getVessel(Number(this.selectedVessel.getMMSI())));
-  }
-
   onSlideChange(): void {
     if (this.disabled) {
-      const newVessels: Vessels = this.vesselsService.allVessels.getVesselSetRegardingTime(this.sliderValue);
+      const newVessels: Vessels = this.vesselsService.allVessels.getVesselSetRegardingTime(this.value);
       this.vesselsService.changeTimeSelectedVessel(newVessels);
       this.selectedVesselService.changeVesselSetSlider(newVessels.getVessel(Number(this.selectedVessel.getMMSI())));
     } else {
@@ -74,5 +61,16 @@ export class SliderComponent implements OnInit {
       this.selectedVesselService.changeVesselSetSlider(this.vesselsService.allVessels.getVessel(this.selectedVesselService.mmsi));
     }
 
+  }
+
+  ngOnInit(): void {
+    this.connectSelectVesselObservable();
+    this.connectVesselObservable();
+  }
+
+  onInputChange($event: MatSliderChange): void {
+    const newVessels: Vessels = this.vesselsService.allVessels.getVesselSetRegardingTime($event.value);
+    this.vesselsService.changeTimeSelectedVessel(newVessels);
+    this.selectedVesselService.changeVesselSetSlider(newVessels.getVessel(Number(this.selectedVessel.getMMSI())));
   }
 }
