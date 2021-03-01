@@ -24,6 +24,8 @@ import {MatSliderModule} from '@angular/material/slider';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatInputModule} from '@angular/material/input';
 
 PlotlyModule.plotlyjs = PlotlyJS;
 
@@ -53,7 +55,9 @@ PlotlyModule.plotlyjs = PlotlyJS;
     MatSliderModule,
     MatSlideToggleModule,
     MatButtonModule,
-    MatIconModule
+    MatIconModule,
+    MatFormFieldModule,
+    MatInputModule
   ],
   providers: [
     {provide: 'SnotifyToastConfig', useValue: ToastDefaults},

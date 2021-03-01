@@ -1,10 +1,12 @@
-<mat-slide-toggle
-  class="margin-slid"
-  [color]="color"
-  (change)="onSlideChange()"
-  [(ngModel)]="disabled"
-  [disabled]=toggleDisable>
-</mat-slide-toggle>
+<div>
+  <mat-slide-toggle
+    class="margin-slid"
+    [color]="color"
+    (change)="onSlideChange()"
+    [(ngModel)]="disabled"
+    [disabled]=toggleDisable>
+  </mat-slide-toggle>
+</div>
 
 <mat-slider
   #mySlider
@@ -19,15 +21,16 @@
   [max]="this.max"></mat-slider>
 
 <div class="replay_control">
-  <button mat-icon-button color="primary" [disabled]=!disabled>
+  <button mat-icon-button color="primary" [disabled]=!disabled (click)="this.speedDown()">
     <mat-icon>fast_rewind</mat-icon>
   </button>
-  <button mat-icon-button color="primary" [disabled]=!disabled>
-    <mat-icon>play_arrow</mat-icon>
+  <button mat-icon-button color="primary" [disabled]=!disabled (click)="this.play()">
+    <mat-icon [innerHTML]="this.playIcon"></mat-icon>
   </button>
-  <button mat-icon-button color="primary" [disabled]=!disabled>
+  <button mat-icon-button color="primary" [disabled]=!disabled (click)="this.speedUp()">
     <mat-icon>fast_forward</mat-icon>
   </button>
+  x<span [innerHTML]="this.speed"></span>
 </div>
 
 
