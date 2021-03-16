@@ -61,6 +61,7 @@ export class Vessel {
       this.nextIndex(time);
       if (this.previousIndexIncreaseValue !== this.indexIncrease ||
         this.currentSelectedMessageIndex === 0 || this.currentSelectedMessageIndex >= this.messages.length - 1) {
+        this.indexIncrease = this.previousIndexIncreaseValue;
         break;
       }
     }

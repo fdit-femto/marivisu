@@ -49,8 +49,9 @@ export class Vessels {
 
   getVesselSetRegardingTime(time: number): Vessels {
     const vesselsSet: Vessels = new Vessels();
+    const realTime = time + this.firstAppearance;
     this.vessels.forEach(value => {
-      const newVessel = value.getVesselSetRegardingTime(time + this.firstAppearance);
+      const newVessel = value.getVesselSetRegardingTime(realTime);
       if (newVessel !== undefined) {
         vesselsSet.addVessel(newVessel);
       }
