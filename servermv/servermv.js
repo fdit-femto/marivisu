@@ -3,9 +3,7 @@ const express = require('express')
 const cors = require('cors');
 const net = require('net');
 const bodyParser = require('body-parser');
-const multer = require("multer");
 
-const upload = multer();
 const server = express()
 
 const parseRawBody = (req, res, next) => {
@@ -20,13 +18,7 @@ const parseRawBody = (req, res, next) => {
 }
 
 server.use(cors())
-// server.use(bodyParser.urlencoded({ extended: true }));
-// server.use(bodyParser.json());
-// server.use(bodyParser.raw());
 server.use(parseRawBody);
-// server.use(bodyParser.text({ type: "*/*" }));
-// server.use(upload.array());
-// server.use(express.static('public'));
 
 const port = 5000
 let dataVessels = new Map();
