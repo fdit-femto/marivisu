@@ -60,14 +60,18 @@ server.post('/data/label', (request, response) => {
  * Send data to front.
  */
 server.get('/data', (request, response) => {
-
+  response.send(sendData())
 });
 
-function cleanOldData(oldSata) {
-  let dataCleaned;
+function sendData () {
+  dataVessels.forEach(element => {
+    dataToSend = dataToSend.concat(element.messages)
+  })
 
-  return dataCleaned;
+  return dataToSend;
 }
+
+
 
 //FDIT servermv
 const serverExFDIT = express()
