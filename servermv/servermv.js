@@ -64,6 +64,8 @@ server.get('/data', (request, response) => {
 });
 
 function sendData () {
+  let dataToSend = [];
+
   dataVessels.forEach(element => {
     dataToSend = dataToSend.concat(element.messages)
   })
