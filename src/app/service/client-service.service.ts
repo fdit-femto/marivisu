@@ -9,35 +9,30 @@ import {Observable} from 'rxjs';
 export class ClientService {
   net = require('net');
   client: Client;
-  private baseUrl = 'http://127.0.0.1:3800';
+  private baseUrlFDIT = 'http://127.0.0.1:3800';
+  private baseUrlJson = 'http://127.0.0.1:5000';
+  private baseUrl;
 
   constructor(private http: HttpClient) {
   }
 
-  // getUsers(): Observable<any> {
-  //   return this.http.get(this.rootURL + '/users');
-  // }
-  //
-  // addUser(user: any): Observable<any> {
-  //   return this.http.post(this.rootURL + '/user', {user});
-  // }
-  private str: string;
 
-  setClient(client: Client): void {
-    this.client = client;
-    this.connectToServer();
-  }
-
-  checkStatus(): string {
-    this.http.get(this.baseUrl + '/').subscribe((data: string) => this.str = data);
-    return this.str;
+  setClient(client: Client, isFDITMode: boolean): void {
+    if (isFDITMode) {
+      this.baseUrl = this.baseUrlFDIT;
+      this.client = client;
+      this.connectToFDITServer();
+    } else {
+      this.baseUrl = this.baseUrlJson;
+      this.client = client;
+    }
   }
 
 
-  private connectToServer(): void {
+  private connectToFDITServer(): void {
     const headers = new HttpHeaders().set('Content-Type', 'application/json');
 
-    this.http.post(this.baseUrl + '/client/startClient',
+    this.http.post(this.baseUrlFDIT + '/client/startClient',
       this.client
       , {headers}).subscribe(
       val => {
@@ -56,11 +51,9 @@ export class ClientService {
     return this.http.get(this.baseUrl + '/client/getMessages');
   }
 
+  getVesselsJson(): Observable<any> {
+    return this.http.get(this.baseUrl + '/data');
+  }
 
-  // private socketOnData(): void {
-  //   this.socket.on('data', (data) => {
-  //     console.log('Received: ' + data);
-  //   });
-  // }
 
 }

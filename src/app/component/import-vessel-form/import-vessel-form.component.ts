@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {SnotifyService} from 'ng-snotify';
 import {Client} from '../../model/client';
-import {ClientService} from '../../service/client.service';
+import {ClientService} from '../../service/client-service.service';
 import {VesselsService} from '../../service/vessels.service';
 import {Vessels} from '../../model/vessels';
 import {interval, Observable} from 'rxjs';
@@ -18,6 +18,7 @@ export class ImportVesselFormComponent implements OnInit {
   client = new Client('127.0.0.1', 1024);
   vessels: Vessels;
   submitted = false;
+  private isFDITMode = true;
   private requestSender;
   private interval: Observable<number>;
 
@@ -46,7 +47,7 @@ export class ImportVesselFormComponent implements OnInit {
 
   onSubmit(): void {
     let vesselsString = '';
-    this.clientService.setClient(this.client);
+    this.clientService.setClient(this.client, this.isFDITMode);
     this.vessels = new Vessels();
     this.vesselsService.changeAllVesselsSet(this.vessels);
     this.interval = interval(1000);
