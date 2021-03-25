@@ -9,6 +9,12 @@
            required
            [(ngModel)]="client.port" name="port">
   </div>
+  <section class="example-section">
+    <mat-radio-group [(ngModel)]="isFDITMode">
+      <mat-radio-button class="example-margin" value=true style="margin-right: 10px" checked>FDI-T</mat-radio-button>
+      <mat-radio-button class="example-margin" value=false>Json</mat-radio-button>
+    </mat-radio-group>
+  </section>
   <div class="modal-footer">
     <button type="submit" class="btn btn-success" [disabled]="!vesselForm.form.valid" >Start</button>
 <!--    <button type="submit" class="btn btn-danger" (click)="stopRequest()" [disabled]="!vesselForm.form.valid" >Stop</button>-->

@@ -95,7 +95,27 @@ export class CsvStructure {
   // tslint:disable-next-line:variable-name
   private _cargoIndex: number;
 
-  constructor(private splitLine: string[]) {
+
+  constructor() {
+    this._mmsiIndex = 0;
+    this._timeIndex = 1;
+    this._latitudeIndex = 2;
+    this._longitudeIndex = 3;
+    this._speedOverGroundIndex = 4;
+    this._courseOverGroundIndex = 5;
+    this._headingIndex = 6;
+    this._vesselNameIndex = 7;
+    this._imoIndex = 8;
+    this._callSignIndex = 9;
+    this._vesselTypeIndex = 10;
+    this._statusIndex = 11;
+    this._lengthIndex = 12;
+    this._widthIndex = 13;
+    this._draftIndex = 14;
+    this._cargoIndex = 15;
+  }
+
+  init(splitLine: string[]): void {
     for (let i = 0; i < splitLine.length - 1; i++) {
       this.affectElement(splitLine[i], i);
     }

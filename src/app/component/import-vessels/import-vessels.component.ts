@@ -64,7 +64,7 @@ export class ImportVesselsComponent implements OnInit {
 
   uploadFiles(index: number): void {
     let nbLine: number;
-    let csvStructure: CsvStructure;
+    const csvStructure = new CsvStructure();
     const fileReader = new FileReader();
     fileReader.onload = () => {
       const lines: string[] = (fileReader.result as string).split('\n');
@@ -74,7 +74,7 @@ export class ImportVesselsComponent implements OnInit {
         line = line.replace(/[^\x20-\x7F]/g, '');
         const splitLine = line.split(',');
         if (isNaN(Number(splitLine[0])) || line === '') {
-          csvStructure = new CsvStructure(splitLine);
+          csvStructure.init(splitLine);
           continue;
         }
         const newMessage = new Message(splitLine, csvStructure);

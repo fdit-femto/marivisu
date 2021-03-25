@@ -17,18 +17,6 @@ export class ClientService {
   }
 
 
-  setClient(client: Client, isFDITMode: boolean): void {
-    if (isFDITMode) {
-      this.baseUrl = this.baseUrlFDIT;
-      this.client = client;
-      this.connectToFDITServer();
-    } else {
-      this.baseUrl = this.baseUrlJson;
-      this.client = client;
-    }
-  }
-
-
   private connectToFDITServer(): void {
     const headers = new HttpHeaders().set('Content-Type', 'application/json');
 
@@ -47,8 +35,24 @@ export class ClientService {
     );
   }
 
+
+  setClient(client: Client, isFDITMode: string): void {
+    if (isFDITMode === 'true') {
+      this.baseUrl = this.baseUrlFDIT;
+      this.client = client;
+      this.connectToFDITServer();
+    } else {
+      this.baseUrl = this.baseUrlJson;
+      this.client = client;
+    }
+  }
+
   getVessels(): Observable<any> {
-    return this.http.get(this.baseUrl + '/client/getMessages');
+    if (this.baseUrl === this.baseUrlFDIT) {
+      return this.http.get(this.baseUrl + '/client/getMessages');
+    } else {
+      return this.http.get(this.baseUrl + '/data');
+    }
   }
 
   getVesselsJson(): Observable<any> {

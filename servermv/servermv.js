@@ -36,7 +36,6 @@ server.get('/', (request, response) => {
  */
 server.post('/api/send_data', (request, response) => {
   let dataReceived = JSON.parse(JSON.parse(request.rawBody));
-  console.log(request.rawBody);
   dataReceived.forEach(element => {
     if (!dataVessels.has(element.MMSI)) {
       const vessel = new SVessel();
@@ -60,7 +59,8 @@ server.post('/data/label', (request, response) => {
  * Send data to front.
  */
 server.get('/data', (request, response) => {
-  response.send(sendData())
+  console.log('--data get--');
+  response.json(sendData())
 });
 
 function sendData () {
