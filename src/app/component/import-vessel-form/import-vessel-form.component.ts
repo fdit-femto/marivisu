@@ -42,6 +42,7 @@ export class ImportVesselFormComponent implements OnInit {
         this.vessels.addMessage(newMessage);
       }
     }
+    console.log(lines.length , ' messages added');
     this.vessels.sortAllMessageInVesselByDate();
     this.vessels.sortAllTraceInVesselByDate();
     this.vesselsService.changeAllVesselsSet(this.vessels);
@@ -62,8 +63,10 @@ export class ImportVesselFormComponent implements OnInit {
       if (vesselsString !== '') {
         if (this.isFDITMode === 'false') {
           vesselsString = this.formatJsonToCsv(vesselsString);
+          this.addVessels(vesselsString);
+        } else {
+          this.addVessels(vesselsString);
         }
-        this.addVessels(vesselsString);
       }
     });
     this.snotifyService.success('Client Started', {
@@ -77,7 +80,7 @@ export class ImportVesselFormComponent implements OnInit {
 
   formatJsonToCsv(json: any): string {
     let csv = '';
-
+    console.log(json);
     json.forEach(element => {
       csv = csv.concat(element.MMSI, ',');
       csv = csv.concat(element.timestamp, ',');

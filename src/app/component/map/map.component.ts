@@ -34,6 +34,8 @@ export class MapComponent implements OnInit {
       hovermode: 'closest',
       showlegend: false,
       mapbox: {
+        // accesstoken: 'pk.eyJ1IjoicGllcmJlcm5hYmUiLCJhIjoiY2sydzF1YnBmMGFlejNtbHE5bXkxZmxpdCJ9.nxKYukVtBIHavc_hjim0kw',
+        // style: 'mapbox://styles/pierbernabe/ck7d65vm1140a1imo0r7vah77',
         style: 'open-street-map',
         bearing: 0,
         center: {lat: 0, lon: 0},
@@ -96,7 +98,7 @@ export class MapComponent implements OnInit {
       if (previousHighlighted !== undefined) {
         previousHighlighted.marker.color = this.highlightedMarkerOldCharacteristic.color;
         previousHighlighted.marker.size = 4;
-         }
+      }
     }
     const newHighlighted = this.graph.data.find(element => element.text === mmsi);
     this.highlightedMarkerOldCharacteristic.id = mmsi;
@@ -122,7 +124,7 @@ export class MapComponent implements OnInit {
       if (this.selectedVessel.getMMSI() === vessel.getMMSI()) {
         color = 'red';
         size = 10;
-      }else {
+      } else {
         color = vessel.getColor();
         size = 4;
       }
