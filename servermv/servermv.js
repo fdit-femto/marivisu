@@ -69,7 +69,7 @@ function sendData () {
   dataVessels.forEach(element => {
     dataToSend = dataToSend.concat(element.messages[element.messages.length - 1])
   })
-  console.log('data sent : \n' , dataToSend, '\n')
+  console.log('data sent : \n' , dataToSend.length, '\n')
   return dataToSend;
 }
 

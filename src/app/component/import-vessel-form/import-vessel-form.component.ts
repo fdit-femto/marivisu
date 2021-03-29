@@ -42,7 +42,7 @@ export class ImportVesselFormComponent implements OnInit {
         this.vessels.addMessage(newMessage);
       }
     }
-    console.log(lines.length , ' messages added');
+    console.log(lines.length, ' messages added');
     this.vessels.sortAllMessageInVesselByDate();
     this.vessels.sortAllTraceInVesselByDate();
     this.vesselsService.changeAllVesselsSet(this.vessels);
@@ -57,13 +57,16 @@ export class ImportVesselFormComponent implements OnInit {
 
   submit(): void {
     let vesselsString = '';
-    this.interval = interval(1000);
-    this.requestSender = interval(1000).subscribe(() => {
+    this.interval = interval(10000);
+    this.requestSender = interval(10000).subscribe(() => {
       this.clientService.getVessels().subscribe((data: string) => vesselsString = data);
       if (vesselsString !== '') {
+
         if (this.isFDITMode === 'false') {
-          vesselsString = this.formatJsonToCsv(vesselsString);
-          this.addVessels(vesselsString);
+          if (Array.isArray(vesselsString)) {
+            vesselsString = this.formatJsonToCsv(vesselsString);
+            this.addVessels(vesselsString);
+          }
         } else {
           this.addVessels(vesselsString);
         }
@@ -81,6 +84,10 @@ export class ImportVesselFormComponent implements OnInit {
   formatJsonToCsv(json: any): string {
     let csv = '';
     console.log(json);
+    if (!Array.isArray(json)) {
+      json = JSON.parse(json);
+    }
+
     json.forEach(element => {
       csv = csv.concat(element.MMSI, ',');
       csv = csv.concat(element.timestamp, ',');
