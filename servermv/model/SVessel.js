@@ -1,14 +1,21 @@
 class SVessel {
 
   constructor() {
-    this.messages = []
+    this.data = {
+      messages: [],
+      label: {}
+    }
     this.nbMessage = 0
     this.timeLength = 0
     this.firstAppearance = 0;
   }
 
+  setLabel(label) {
+    this.data.label = label
+  }
+
   addMessage(newMessage) {
-    this.messages.push(newMessage)
+    this.data.messages.push(newMessage)
     this.calculateTimeLength()
 
     if (this.nbMessage === 0) {
@@ -21,8 +28,8 @@ class SVessel {
   }
 
   removeFirstMessage() {
-    this.messages.shift()
-    this.firstAppearance = this.messages[0]
+    this.data.messages.shift()
+    this.firstAppearance = this.data[0]
   }
 
   calculateTimeLength(timestamp) {
@@ -34,6 +41,6 @@ class SVessel {
       this.removeFirstMessage()
     }
   }
-
 }
+
 module.exports = SVessel

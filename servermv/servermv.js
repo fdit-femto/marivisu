@@ -52,7 +52,9 @@ server.post('/api/send_data', (request, response) => {
  * Receive label vessel.
  */
 server.post('/data/label', (request, response) => {
-
+  let dataReceived = JSON.parse(request.rawBody);
+  dataVessels.get(dataReceived.MMSI).data.label = dataReceived
+  response.sendStatus(200);
 });
 
 /**
@@ -67,9 +69,10 @@ function sendData () {
   let dataToSend = [];
 
   dataVessels.forEach(element => {
-    dataToSend = dataToSend.concat(element.messages[element.messages.length - 1])
+    dataToSend = dataToSend.concat(element.data.messages[element.messages.length - 1])
   })
-  console.log('data sent : \n' , dataToSend.length, '\n')
+  // console.log('data sent : \n' , dataToSend.length, '\n')
+  console.log('data sent : \n' , dataToSend, '\n')
   return dataToSend;
 }
 
