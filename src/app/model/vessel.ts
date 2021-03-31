@@ -1,9 +1,11 @@
 import {Message} from './message';
 import {LatLng} from 'leaflet';
+import {Label} from './label';
 
 export class Vessel {
   messages: Array<Message>;
   trace: Array<LatLng> = new Array<LatLng>();
+  label: Label;
   firstAppearance: number;
   currentSelectedMessageIndex = 0;
   private indexIncrease = true;
@@ -11,11 +13,16 @@ export class Vessel {
 
   constructor(messages: Array<Message>) {
     this.messages = messages;
+    this.label = new Label()
   }
 
   addMessage(message: Message): void {
     this.messages.push(message);
     this.determineFirstAppearance(message);
+  }
+
+  addLabel(label: Label): void {
+    this.label = label;
   }
 
   sortMessageByDate(): void {

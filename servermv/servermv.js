@@ -1,10 +1,16 @@
 const SVessel = require('./model/SVessel.js')
+const SLabel = require('./model/SLabel.js')
 const express = require('express')
 const cors = require('cors');
 const net = require('net');
 const bodyParser = require('body-parser');
 
 const server = express()
+
+const labelType = {
+  NONE: 0,
+  DEC: 1
+}
 
 const parseRawBody = (req, res, next) => {
   req.setEncoding('utf8');
@@ -22,6 +28,7 @@ server.use(parseRawBody);
 
 const port = 5000
 let dataVessels = new Map();
+let labels = new Map();
 
 server.listen(port, () => {
   console.log(`Data server listening at http://localhost:${port}`)
@@ -41,7 +48,7 @@ server.post('/api/send_data', (request, response) => {
       const vessel = new SVessel();
       vessel.addMessage(element);
       dataVessels.set(element.MMSI, vessel);
-    }else {
+    } else {
       dataVessels.get(element.MMSI).addMessage(element);
     }
   })
@@ -54,6 +61,7 @@ server.post('/api/send_data', (request, response) => {
 server.post('/data/label', (request, response) => {
   let dataReceived = JSON.parse(request.rawBody);
   dataVessels.get(dataReceived.MMSI).data.label = dataReceived
+  labels.set(dataReceived.MMSI, new SLabel(dataReceived.MMSI, dataReceived.timestamp, dataReceived.LAT, dataReceived.LON, labelType.DEC))
   response.sendStatus(200);
 });
 
@@ -62,20 +70,42 @@ server.post('/data/label', (request, response) => {
  */
 server.get('/data', (request, response) => {
   console.log('--data get--');
-  response.json(sendData())
+  response.json(sendDataMessages())
 });
 
-function sendData () {
+/**
+ * send label to front.
+ */
+server.get('/label', (request, response) => {
+  console.log('--label get--');
+  response.json(sendDataLabel())
+});
+
+function sendDataMessages() {
   let dataToSend = [];
 
   dataVessels.forEach(element => {
-    dataToSend = dataToSend.concat(element.data.messages[element.messages.length - 1])
+    if (element.label === {}) {
+      dataToSend = dataToSend.concat(element.data.messages[element.data.messages.length - 1])
+    } else {
+      dataToSend = dataToSend.concat(element.data.messages)
+    }
   })
   // console.log('data sent : \n' , dataToSend.length, '\n')
-  console.log('data sent : \n' , dataToSend, '\n')
+  console.log('data sent : \n', dataToSend, '\n')
   return dataToSend;
 }
 
+function sendDataLabel() {
+  let dataToSend = [];
+
+  labels.forEach(element => {
+    dataToSend = dataToSend.concat(element)
+  })
+  // console.log('data sent : \n' , dataToSend.length, '\n')
+  console.log('data sent : \n', dataToSend, '\n')
+  return dataToSend;
+}
 
 
 //FDIT servermv

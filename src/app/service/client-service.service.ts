@@ -55,6 +55,13 @@ export class ClientService {
     }
   }
 
+  getLabel(): Observable<any> {
+    if (this.baseUrl === this.baseUrlFDIT) {
+    } else {
+      return this.http.get(this.baseUrl + '/label');
+    }
+  }
+
   getVesselsJson(): Observable<any> {
     return this.http.get(this.baseUrl + '/data');
   }

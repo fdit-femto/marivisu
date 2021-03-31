@@ -48,6 +48,12 @@ export class ImportVesselFormComponent implements OnInit {
     this.vesselsService.changeAllVesselsSet(this.vessels);
   }
 
+  private addLabel(label: any): void {
+    label.forEach(element => {
+      this.vessels.vessels.get(element.mmsi).addLabel(element);
+    });
+  }
+
   onSubmit(): void {
     this.clientService.setClient(this.client, this.isFDITMode);
     this.vessels = new Vessels();
@@ -57,15 +63,19 @@ export class ImportVesselFormComponent implements OnInit {
 
   submit(): void {
     let vesselsString = '';
-    this.interval = interval(10000);
-    this.requestSender = interval(10000).subscribe(() => {
+    let vesselslabel = '';
+    this.interval = interval(5000);
+    this.requestSender = interval(5000).subscribe(() => {
       this.clientService.getVessels().subscribe((data: string) => vesselsString = data);
-      if (vesselsString !== '') {
+      this.clientService.getLabel().subscribe((data: string) => vesselslabel = data);
 
+      if (vesselsString !== '') {
         if (this.isFDITMode === 'false') {
-          if (Array.isArray(vesselsString)) {
-            vesselsString = this.formatJsonToCsv(vesselsString);
-            this.addVessels(vesselsString);
+          vesselsString = this.formatJsonToCsv(vesselsString);
+          // @ts-ignore
+          this.addVessels(vesselsString);
+          if (Array.isArray(vesselslabel) && vesselslabel.length !== 0) {
+            this.addLabel(vesselslabel);
           }
         } else {
           this.addVessels(vesselsString);
@@ -111,5 +121,4 @@ export class ImportVesselFormComponent implements OnInit {
   ngOnInit(): void {
     this.vesselsService.currentVessels.subscribe(vessels => this.vessels = vessels);
   }
-
 }

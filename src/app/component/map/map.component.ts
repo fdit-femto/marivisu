@@ -5,6 +5,7 @@ import {SelectedVesselService} from '../../service/selected-vessel.service';
 import {Vessel} from '../../model/vessel';
 import * as PlotlyJS from 'plotly.js/dist/plotly.js';
 import {PlotlyModule} from 'angular-plotly.js';
+import {LabelType} from '../../model/label-type.enum';
 
 PlotlyModule.plotlyjs = PlotlyJS;
 
@@ -121,6 +122,15 @@ export class MapComponent implements OnInit {
     this.vessels.vessels.forEach(((vessel) => {
       let color: string;
       let size: number;
+      let messagesToDisplay = {
+        name: null,
+        type: null,
+        text: null,
+        lat: [],
+        lon: [],
+        mode: 'lines',
+        marker: {color: null, size: null}
+      };
       if (this.selectedVessel.getMMSI() === vessel.getMMSI()) {
         color = 'red';
         size = 10;
@@ -128,14 +138,30 @@ export class MapComponent implements OnInit {
         color = vessel.getColor();
         size = 4;
       }
-      const messagesToDisplay = {
-        name: '',
-        type: 'scattermapbox',
-        text: vessel.getMMSI(),
-        lat: [],
-        lon: [],
-        marker: {color, size}
-      };
+      if (this.selectedVessel.label.type === LabelType.DEC) {
+        // type = 'scattergeo';
+        messagesToDisplay = {
+          name: '',
+          type: 'scattermapbox',
+          text: vessel.getMMSI(),
+          lat: [],
+          lon: [],
+          mode: 'lines',
+          marker: {color: 'fuchsia', size}
+        };
+      } else {
+        // type = 'scattermapbox';
+        messagesToDisplay = {
+          name: '',
+          type: 'scattermapbox',
+          text: vessel.getMMSI(),
+          lat: [],
+          lon: [],
+          mode: 'points',
+          marker: {color, size}
+        };
+
+      }
       vessel.messages.forEach((message) => {
         messagesToDisplay.lat.push(message.latitude);
         messagesToDisplay.lon.push(message.longitude);
