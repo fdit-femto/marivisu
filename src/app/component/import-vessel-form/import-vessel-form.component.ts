@@ -28,7 +28,6 @@ export class ImportVesselFormComponent implements OnInit {
   }
 
   private addVessels(vesselsString: string): void {
-    this.vessels = new Vessels();
     const lines: string[] = vesselsString.split('\n');
     let csvStructure: CsvStructure;
     csvStructure = new CsvStructure();
@@ -50,7 +49,10 @@ export class ImportVesselFormComponent implements OnInit {
 
   private addLabel(label: any): void {
     label.forEach(element => {
-      this.vessels.vessels.get(element.mmsi).addLabel(element);
+      if (this.vessels.vessels.get(element.mmsi) !== undefined){
+        this.vessels.vessels.get(element.mmsi).addLabel(element);
+        this.vessels.addLabel(element.mmsi);
+      }
     });
   }
 

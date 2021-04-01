@@ -4,11 +4,22 @@ import {Message} from './message';
 export class Vessels {
   allVessels: Map<number, Vessel>;
   vessels: Map<number, Vessel>;
+  newVessels: Map<number, Vessel>;
+  vesselsLabeled: string[];
   firstAppearance: number;
   lastAppearance: number;
+  // tslint:disable-next-line:variable-name
+  private numberOfMessages: number;
 
   constructor() {
     this.vessels = new Map<number, Vessel>();
+    this.newVessels = new Map<number, Vessel>();
+    this.numberOfMessages = 0;
+    this.vesselsLabeled = [];
+  }
+
+  get size(): number {
+    return this.numberOfMessages;
   }
 
   addMessage(message: Message): void {
@@ -19,6 +30,11 @@ export class Vessels {
       this.determineFirstAppearance(message);
     }
     this.vessels.get(Number(message.mmsi)).addMessage(message);
+    this.numberOfMessages++;
+  }
+
+  addLabel(mmsi: string): void {
+    this.vesselsLabeled.push(mmsi);
   }
 
   addVessel(vessel: Vessel): void {

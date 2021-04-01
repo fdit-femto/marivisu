@@ -128,8 +128,8 @@ export class MapComponent implements OnInit {
         text: null,
         lat: [],
         lon: [],
-        mode: 'lines',
-        marker: {color: null, size: null}
+        mode: null,
+        marker: {color: null, size: null, width: null}
       };
       if (this.selectedVessel.getMMSI() === vessel.getMMSI()) {
         color = 'red';
@@ -138,16 +138,18 @@ export class MapComponent implements OnInit {
         color = vessel.getColor();
         size = 4;
       }
-      if (this.selectedVessel.label.type === LabelType.DEC) {
+      if (vessel.label.type === LabelType.DEC) {
+        const text = vessel.getMMSI() + '  ASD';
         // type = 'scattergeo';
         messagesToDisplay = {
           name: '',
           type: 'scattermapbox',
-          text: vessel.getMMSI(),
+          text,
           lat: [],
           lon: [],
-          mode: 'lines',
-          marker: {color: 'fuchsia', size}
+          mode: 'points',
+          // @ts-ignore
+          marker: {color: 'red', size: 7}
         };
       } else {
         // type = 'scattermapbox';
@@ -158,6 +160,7 @@ export class MapComponent implements OnInit {
           lat: [],
           lon: [],
           mode: 'points',
+          // @ts-ignore
           marker: {color, size}
         };
 

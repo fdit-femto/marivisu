@@ -13,7 +13,7 @@ export class Vessel {
 
   constructor(messages: Array<Message>) {
     this.messages = messages;
-    this.label = new Label()
+    this.label = new Label();
   }
 
   addMessage(message: Message): void {
