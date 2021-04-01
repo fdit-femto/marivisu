@@ -28,6 +28,7 @@ server.use(parseRawBody);
 
 const port = 5000
 let dataVessels = new Map();
+let newDataVessels = new Map();
 let labels = new Map();
 
 server.listen(port, () => {
@@ -51,6 +52,13 @@ server.post('/api/send_data', (request, response) => {
     } else {
       dataVessels.get(element.MMSI).addMessage(element);
     }
+    if (!newDataVessels.has(element.MMSI)) {
+      const vessel = new SVessel();
+      vessel.addMessage(element);
+      newDataVessels.set(element.MMSI, vessel);
+    } else {
+      newDataVessels.get(element.MMSI).addMessage(element);
+    }
   })
   response.sendStatus(200);
 });
@@ -71,6 +79,7 @@ server.post('/data/label', (request, response) => {
 server.get('/data', (request, response) => {
   console.log('--data get--');
   response.json(sendDataMessages())
+  newDataVessels.clear()
 });
 
 /**
@@ -84,15 +93,15 @@ server.get('/label', (request, response) => {
 function sendDataMessages() {
   let dataToSend = [];
 
-  dataVessels.forEach(element => {
+  newDataVessels.forEach(element => {
     if (element.label === {}) {
-      dataToSend = dataToSend.concat(element.data.messages[element.data.messages.length - 1])
+      dataToSend = newDataVessels.concat(element.data.messages[element.data.messages.length - 1])
     } else {
       dataToSend = dataToSend.concat(element.data.messages)
     }
   })
-  // console.log('data sent : \n' , dataToSend.length, '\n')
-  console.log('data sent : \n', dataToSend, '\n')
+  console.log('data sent : \n' , dataToSend.length, '\n')
+  // console.log('data sent : \n', dataToSend, '\n')
   return dataToSend;
 }
 
