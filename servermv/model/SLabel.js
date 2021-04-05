@@ -1,9 +1,4 @@
 class SLabel {
-  mmsi;
-  timestamp;
-  latitude;
-  longitude;
-  type;
 
   constructor(mmsi, timestamp, latitude, longitude, type) {
     this.mmsi = mmsi;

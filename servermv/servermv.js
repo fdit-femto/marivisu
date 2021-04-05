@@ -100,7 +100,7 @@ function sendDataMessages() {
       dataToSend = dataToSend.concat(element.data.messages)
     }
   })
-  console.log('data sent : \n' , dataToSend.length, '\n')
+  console.log('data sent : \n', dataToSend.length, '\n')
   // console.log('data sent : \n', dataToSend, '\n')
   return dataToSend;
 }
