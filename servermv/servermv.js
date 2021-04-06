@@ -67,7 +67,7 @@ server.post('/api/send_data', (request, response) => {
  * Receive label vessel.
  */
 server.post('/data/label', (request, response) => {
-  let dataReceived = JSON.parse(request.rawBody);
+  let dataReceived = JSON.parse(JSON.parse(request.rawBody));
   dataReceived.forEach(element => {
     // dataVessels.get(dataReceived.MMSI).data.label = element
     labels.set(element.MMSI, new SLabel(element.MMSI, element.timestamp, element.LAT, element.LON, labelType.ASD))
