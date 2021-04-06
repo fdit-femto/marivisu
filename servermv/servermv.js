@@ -9,7 +9,7 @@ const server = express()
 
 const labelType = {
   NONE: 0,
-  DEC: 1
+  ASD: 1
 }
 
 const parseRawBody = (req, res, next) => {
@@ -68,8 +68,10 @@ server.post('/api/send_data', (request, response) => {
  */
 server.post('/data/label', (request, response) => {
   let dataReceived = JSON.parse(request.rawBody);
-  dataVessels.get(dataReceived.MMSI).data.label = dataReceived
-  labels.set(dataReceived.MMSI, new SLabel(dataReceived.MMSI, dataReceived.timestamp, dataReceived.LAT, dataReceived.LON, labelType.DEC))
+  dataReceived.forEach(element => {
+    // dataVessels.get(dataReceived.MMSI).data.label = element
+    labels.set(element.MMSI, new SLabel(element.MMSI, element.timestamp, element.LAT, element.LON, labelType.ASD))
+  })
   response.sendStatus(200);
 });
 
