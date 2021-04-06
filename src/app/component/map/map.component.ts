@@ -139,7 +139,7 @@ export class MapComponent implements OnInit {
         size = 4;
       }
       if (vessel.label.type === LabelType.DEC) {
-        const text = vessel.getMMSI() + '  ASD';
+        const text = 'mmsi: ' + vessel.getMMSI() + '  ASD';
         // type = 'scattergeo';
         messagesToDisplay = {
           name: '',
@@ -156,7 +156,7 @@ export class MapComponent implements OnInit {
         messagesToDisplay = {
           name: '',
           type: 'scattermapbox',
-          text: vessel.getMMSI(),
+          text: 'mmsi: ' + vessel.getMMSI(),
           lat: [],
           lon: [],
           mode: 'points',
@@ -168,6 +168,7 @@ export class MapComponent implements OnInit {
       vessel.messages.forEach((message) => {
         messagesToDisplay.lat.push(message.latitude);
         messagesToDisplay.lon.push(message.longitude);
+        messagesToDisplay.text += '<br>time: ' + message.time;
       });
       this.graph.data.push(messagesToDisplay);
     }));
