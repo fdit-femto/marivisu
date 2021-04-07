@@ -168,7 +168,7 @@ export class MapComponent implements OnInit {
       vessel.messages.forEach((message) => {
         messagesToDisplay.lat.push(message.latitude);
         messagesToDisplay.lon.push(message.longitude);
-        messagesToDisplay.text = 'mmsi: ' + vessel.getMMSI() + '<br>time: ' + this.secondsToString(Number(message.time) / 1000);
+        messagesToDisplay.text = 'mmsi: ' + vessel.getMMSI() + '<br>time: ' + this.secondsToString(Number(message.time));
       });
       this.graph.data.push(messagesToDisplay);
     }));
@@ -176,12 +176,8 @@ export class MapComponent implements OnInit {
 
 
   secondsToString(seconds: number): string {
-    const numyears = Math.floor(seconds / 31536000);
-    const numdays = Math.floor((seconds % 31536000) / 86400);
-    const numhours = Math.floor(((seconds % 31536000) % 86400) / 3600);
-    const numminutes = Math.floor((((seconds % 31536000) % 86400) % 3600) / 60);
-    const numseconds = (((seconds % 31536000) % 86400) % 3600) % 60;
-    return numyears + ' years ' + numdays + ' days ' + numhours + ' hours ' + numminutes + ' minutes ' + numseconds + ' seconds';
-
+    const date = new Date(seconds * 1000);
+    return date.getDay() + '/' + date.getMonth() + '/' + date.getUTCFullYear() + ' ' + date.getHours() + ':' + date.getMinutes() + ':' +
+      date.getSeconds();
   }
 }
