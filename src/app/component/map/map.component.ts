@@ -177,7 +177,7 @@ export class MapComponent implements OnInit {
 
   secondsToString(seconds: number): string {
     const date = new Date(seconds * 1000);
-    return date.getDay() + '/' + date.getMonth() + '/' + date.getUTCFullYear() + ' ' + date.getHours() + ':' + date.getMinutes() + ':' +
-      date.getSeconds();
+    return date.getUTCDay() + '/' + date.getUTCMonth() + '/' + date.getUTCFullYear() + ' ' + date.getUTCHours() + ':' +
+      date.getUTCMinutes() + ':' + date.getUTCSeconds();
   }
 }
