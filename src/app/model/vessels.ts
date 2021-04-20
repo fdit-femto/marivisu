@@ -1,5 +1,6 @@
 import {Vessel} from './vessel';
 import {Message} from './message';
+import {CsvStructure} from './csv-structure';
 
 export class Vessels {
   allVessels: Map<number, Vessel>;
@@ -22,14 +23,15 @@ export class Vessels {
     return this.numberOfMessages;
   }
 
-  addMessage(message: Message): void {
-    this.determineFirstAppearance(message);
-    this.determineLastAppearance(message);
-    if (!this.vessels.get(Number(message.mmsi))) {
-      this.vessels.set(Number(message.mmsi), new Vessel(new Array<Message>()));
-      this.determineFirstAppearance(message);
+  addMessage(splitLine, csvStructure: CsvStructure): void {
+    if (!this.vessels.get(Number(splitLine[csvStructure.mmsiIndex]))) {
+      this.vessels.set(Number(splitLine[csvStructure.mmsiIndex]), new Vessel(new Message(splitLine, csvStructure)));
+      this.determineFirstAppearance(splitLine[csvStructure.mmsiIndex]);
+    } else {
+      this.vessels.get(Number(splitLine[csvStructure.mmsiIndex])).addMessageRaw(splitLine, csvStructure);
     }
-    this.vessels.get(Number(message.mmsi)).addMessage(message);
+    this.determineFirstAppearance(splitLine[csvStructure.timeIndex]);
+    this.determineLastAppearance(splitLine[csvStructure.timeIndex]);
     this.numberOfMessages++;
   }
 
@@ -41,23 +43,19 @@ export class Vessels {
     this.vessels.set(Number(vessel.getMMSI()), vessel);
   }
 
-  sortAllMessageInVesselByDate(): void {
-    this.vessels.forEach(value => value.sortMessageByDate());
-  }
+  // sortAllTraceInVesselByDate(): void {
+  //   this.vessels.forEach(value => value.populateTrace());
+  // }
 
-  sortAllTraceInVesselByDate(): void {
-    this.vessels.forEach(value => value.populateTrace());
-  }
-
-  determineFirstAppearance(message: Message): void {
-    const timeInS = Date.parse(message.time) / 1000;
+  determineFirstAppearance(time: string): void {
+    const timeInS = Date.parse(time) / 1000;
     if (this.firstAppearance === undefined || this.firstAppearance > timeInS) {
       this.firstAppearance = timeInS;
     }
   }
 
-  determineLastAppearance(message: Message): void {
-    const timeInS = Date.parse(message.time) / 1000;
+  determineLastAppearance(time: string): void {
+    const timeInS = Date.parse(time) / 1000;
     if (this.lastAppearance === undefined || this.lastAppearance < timeInS) {
       this.lastAppearance = timeInS;
     }
@@ -77,10 +75,11 @@ export class Vessels {
   }
 
   getVessel(mmsi: number): Vessel {
-    let vessel: Vessel = this.vessels.get(Number(mmsi));
+    const vessel: Vessel = this.vessels.get(Number(mmsi));
 
     if (vessel === undefined) {
-      vessel = new Vessel(new Array<Message>());
+      return undefined;
+      // vessel = new Vessel(new Array<Message>());
     }
 
     return vessel;
