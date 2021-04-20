@@ -2,25 +2,9 @@ import {CsvStructure} from './csv-structure';
 
 export class Message {
 
-
   constructor(splitLine: string[], csvStructure: CsvStructure) {
     this.setMmsi(csvStructure.mmsiIndex, splitLine);
-    this.setTime(csvStructure.timeIndex, splitLine);
-    this.setLatitude(csvStructure.latitudeIndex, splitLine);
-    this.setLongitude(csvStructure.longitudeIndex, splitLine);
-    this.setSpeedOverGround(csvStructure.speedOverGroundIndex, splitLine);
-    this.setCourseOverGround(csvStructure.courseOverGroundIndex, splitLine);
-    this.setHeading(csvStructure.headingIndex, splitLine);
-    this.setVesselName(csvStructure.vesselNameIndex, splitLine);
-    this.setImo(csvStructure.imoIndex, splitLine);
-    this.setCallSign(csvStructure.callSignIndex, splitLine);
-    this.setVesselType(csvStructure.vesselTypeIndex, splitLine);
-    this.setStatus(csvStructure.statusIndex, splitLine);
-    this.setLength(csvStructure.lengthIndex, splitLine);
-    this.setWidth(csvStructure.widthIndex, splitLine);
-    this.setDraft(csvStructure.draftIndex, splitLine);
-    this.setCargo(csvStructure.cargoIndex, splitLine);
-    this.setTooltip(csvStructure, splitLine);
+    this.addMessageRaw(splitLine, csvStructure);
   }
 
   mmsi: string;
@@ -46,6 +30,29 @@ export class Message {
     const date = new Date(seconds * 1000);
     return date.getUTCDay() + '/' + date.getUTCMonth() + '/' + date.getUTCFullYear() + ' ' + date.getUTCHours() + ':' +
       date.getUTCMinutes() + ':' + date.getUTCSeconds();
+  }
+
+  addMessageRaw(splitLine: string[], csvStructure): void {
+    this.setTime(csvStructure.timeIndex, splitLine);
+    this.setLatitude(csvStructure.latitudeIndex, splitLine);
+    this.setLongitude(csvStructure.longitudeIndex, splitLine);
+    this.setSpeedOverGround(csvStructure.speedOverGroundIndex, splitLine);
+    this.setCourseOverGround(csvStructure.courseOverGroundIndex, splitLine);
+    this.setHeading(csvStructure.headingIndex, splitLine);
+    this.setVesselName(csvStructure.vesselNameIndex, splitLine);
+    this.setImo(csvStructure.imoIndex, splitLine);
+    this.setCallSign(csvStructure.callSignIndex, splitLine);
+    this.setVesselType(csvStructure.vesselTypeIndex, splitLine);
+    this.setStatus(csvStructure.statusIndex, splitLine);
+    this.setLength(csvStructure.lengthIndex, splitLine);
+    this.setWidth(csvStructure.widthIndex, splitLine);
+    this.setDraft(csvStructure.draftIndex, splitLine);
+    this.setCargo(csvStructure.cargoIndex, splitLine);
+    this.setTooltip(csvStructure, splitLine);
+  }
+
+  size(): number {
+    return this.latitude.length;
   }
 
   private setMmsi(index, splitLine: string[]): void {
@@ -149,5 +156,4 @@ export class Message {
       Message.secondsToReadableString(Number(splitLine[csvStructure.timeIndex]));
     this.tooltip.push(tooltipText);
   }
-
 }

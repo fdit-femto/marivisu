@@ -37,15 +37,14 @@ export class ImportVesselFormComponent implements OnInit {
       if (isNaN(Number(splitLine[0])) || line === '') {
         csvStructure.init(splitLine);
       } else {
-        const newMessage = new Message(splitLine, csvStructure);
-        this.vessels.addMessage(newMessage);
+        this.vessels.addMessage(splitLine, csvStructure);
       }
     }
     console.log(lines.length, ' messages added');
-    this.vessels.sortAllMessageInVesselByDate();
-    this.vessels.sortAllTraceInVesselByDate();
     this.vesselsService.changeAllVesselsSet(this.vessels);
   }
+
+
 
   private addLabel(label: any): void {
     label.forEach(element => {
