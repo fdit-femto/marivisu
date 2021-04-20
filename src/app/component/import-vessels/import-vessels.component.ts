@@ -77,11 +77,8 @@ export class ImportVesselsComponent implements OnInit {
           csvStructure.init(splitLine);
           continue;
         }
-        const newMessage = new Message(splitLine, csvStructure);
-        this.vessels.addMessage(newMessage);
+        this.vessels.addMessage(splitLine, csvStructure);
       }
-      this.vessels.sortAllMessageInVesselByDate();
-      this.vessels.sortAllTraceInVesselByDate();
       this.vesselsService.changeAllVesselsSet(this.vessels);
     };
 
