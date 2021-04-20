@@ -165,11 +165,9 @@ export class MapComponent implements OnInit {
         };
 
       }
-      vessel.messages.forEach((message) => {
-        messagesToDisplay.lat.push(message.latitude);
-        messagesToDisplay.lon.push(message.longitude);
-        messagesToDisplay.text = 'mmsi: ' + vessel.getMMSI() + '<br>time: ' + this.secondsToString(Number(message.time));
-      });
+      messagesToDisplay.lat.push(vessel.messages.latitude);
+      messagesToDisplay.lon.push(vessel.messages.longitude);
+      messagesToDisplay.text = vessel.messages.tooltip;
       this.graph.data.push(messagesToDisplay);
     }));
   }
