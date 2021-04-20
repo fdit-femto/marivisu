@@ -56,84 +56,52 @@ export class GraphComponent implements OnInit {
     this.trace.x = [];
     switch (valueType) {
       case 'mmsi':
-        this.selectedVessel.messages.forEach(value => {
-          this.trace.x.push(value.mmsi);
-        });
+        this.trace.x.push(this.selectedVessel.messages.mmsi);
         break;
       case  'time':
-        this.selectedVessel.messages.forEach(value => {
-          this.trace.x.push(Date.parse(value.time) / 1000 - this.selectedVessel.firstAppearance);
-        });
+        this.trace.x.push(this.selectedVessel.messages.time);
         break;
       case  'latitude':
-        this.selectedVessel.messages.forEach(value => {
-          this.trace.x.push(value.latitude);
-        });
+        this.trace.x.push(this.selectedVessel.messages.latitude);
         break;
       case  'longitude':
-        this.selectedVessel.messages.forEach(value => {
-          this.trace.x.push(value.longitude);
-        });
+        this.trace.x.push(this.selectedVessel.messages.longitude);
         break;
       case  'speedOverGround':
-        this.selectedVessel.messages.forEach(value => {
-          this.trace.x.push(value.speedOverGround);
-        });
+        this.trace.x.push(this.selectedVessel.messages.speedOverGround);
         break;
       case  'courseOverGround':
-        this.selectedVessel.messages.forEach(value => {
-          this.trace.x.push(value.courseOverGround);
-        });
+        this.trace.x.push(this.selectedVessel.messages.courseOverGround);
         break;
       case  'heading':
-        this.selectedVessel.messages.forEach(value => {
-          this.trace.x.push(value.heading);
-        });
+        this.trace.x.push(this.selectedVessel.messages.heading);
         break;
       case  'vesselName':
-        this.selectedVessel.messages.forEach(value => {
-          this.trace.x.push(value.vesselName);
-        });
+        this.trace.x.push(this.selectedVessel.messages.vesselName);
         break;
       case  'imo':
-        this.selectedVessel.messages.forEach(value => {
-          this.trace.x.push(value.imo);
-        });
+        this.trace.x.push(this.selectedVessel.messages.imo);
         break;
       case  'callSign':
-        this.selectedVessel.messages.forEach(value => {
-          this.trace.x.push(value.callSign);
-        });
+        this.trace.x.push(this.selectedVessel.messages.callSign);
         break;
       case  'vesselType':
-        this.selectedVessel.messages.forEach(value => {
-          this.trace.x.push(value.vesselType);
-        });
+        this.trace.x.push(this.selectedVessel.messages.vesselType);
         break;
       case  'status':
-        this.selectedVessel.messages.forEach(value => {
-          this.trace.x.push(value.status);
-        });
+        this.trace.x.push(this.selectedVessel.messages.status);
         break;
       case  'length':
-        this.selectedVessel.messages.forEach(value => {
-          this.trace.x.push(value.length);
-        });
+        this.trace.x.push(this.selectedVessel.messages.length);
         break;
       case  'width':
-        this.selectedVessel.messages.forEach(value => {
-          this.trace.x.push(value.width);
-        });
+        this.trace.x.push(this.selectedVessel.messages.width);
         break;
       case  'draft':
-        this.selectedVessel.messages.forEach(value => {
-          this.trace.x.push(value.draft);
-        });
+        this.trace.x.push(this.selectedVessel.messages.draft);
         break;
       case  'cargo':
-        this.selectedVessel.messages.forEach(value => {
-          this.trace.x.push(value.cargo);
-        });
+        this.trace.x.push(this.selectedVessel.messages.cargo);
         break;
     }
     this.graph.data = [];
@@ -146,84 +114,52 @@ export class GraphComponent implements OnInit {
     this.trace.y = [];
     switch (valueType) {
       case 'mmsi':
-        this.selectedVessel.messages.forEach(value => {
-          this.trace.y.push(value.mmsi);
-        });
+        this.trace.y.push(this.selectedVessel.messages.mmsi);
         break;
       case  'time':
-        this.selectedVessel.messages.forEach(value => {
-          this.trace.y.push(Date.parse(value.time) / 1000 - this.selectedVessel.firstAppearance);
-        });
+        this.trace.y.push(this.selectedVessel.messages.time);
         break;
       case  'latitude':
-        this.selectedVessel.messages.forEach(value => {
-          this.trace.y.push(value.latitude);
-        });
+        this.trace.y.push(this.selectedVessel.messages.latitude);
         break;
       case  'longitude':
-        this.selectedVessel.messages.forEach(value => {
-          this.trace.y.push(value.longitude);
-        });
+        this.trace.y.push(this.selectedVessel.messages.longitude);
         break;
       case  'speedOverGround':
-        this.selectedVessel.messages.forEach(value => {
-          this.trace.y.push(value.speedOverGround);
-        });
+        this.trace.y.push(this.selectedVessel.messages.speedOverGround);
         break;
       case  'courseOverGround':
-        this.selectedVessel.messages.forEach(value => {
-          this.trace.y.push(value.courseOverGround);
-        });
+        this.trace.y.push(this.selectedVessel.messages.courseOverGround);
         break;
       case  'heading':
-        this.selectedVessel.messages.forEach(value => {
-          this.trace.y.push(value.heading);
-        });
+        this.trace.y.push(this.selectedVessel.messages.heading);
         break;
       case  'vesselName':
-        this.selectedVessel.messages.forEach(value => {
-          this.trace.y.push(value.vesselName);
-        });
+        this.trace.y.push(this.selectedVessel.messages.vesselName);
         break;
       case  'imo':
-        this.selectedVessel.messages.forEach(value => {
-          this.trace.y.push(value.imo);
-        });
+        this.trace.y.push(this.selectedVessel.messages.imo);
         break;
       case  'callSign':
-        this.selectedVessel.messages.forEach(value => {
-          this.trace.y.push(value.callSign);
-        });
+        this.trace.y.push(this.selectedVessel.messages.callSign);
         break;
       case  'vesselType':
-        this.selectedVessel.messages.forEach(value => {
-          this.trace.y.push(value.vesselType);
-        });
+        this.trace.y.push(this.selectedVessel.messages.vesselType);
         break;
       case  'status':
-        this.selectedVessel.messages.forEach(value => {
-          this.trace.y.push(value.status);
-        });
+        this.trace.y.push(this.selectedVessel.messages.status);
         break;
       case  'length':
-        this.selectedVessel.messages.forEach(value => {
-          this.trace.y.push(value.length);
-        });
+        this.trace.y.push(this.selectedVessel.messages.length);
         break;
       case  'width':
-        this.selectedVessel.messages.forEach(value => {
-          this.trace.y.push(value.width);
-        });
+        this.trace.y.push(this.selectedVessel.messages.width);
         break;
       case  'draft':
-        this.selectedVessel.messages.forEach(value => {
-          this.trace.y.push(value.draft);
-        });
+        this.trace.y.push(this.selectedVessel.messages.draft);
         break;
       case  'cargo':
-        this.selectedVessel.messages.forEach(value => {
-          this.trace.y.push(value.cargo);
-        });
+        this.trace.y.push(this.selectedVessel.messages.cargo);
         break;
     }
     this.graph.data = [];
