@@ -1,64 +1,40 @@
 import {Message} from './message';
-import {LatLng} from 'leaflet';
 import {Label} from './label';
 
 export class Vessel {
-  messages: Array<Message>;
-  trace: Array<LatLng> = new Array<LatLng>();
+  messages: Message;
   label: Label;
-  firstAppearance: number;
   currentSelectedMessageIndex = 0;
   private indexIncrease = true;
   private previousIndexIncreaseValue = true;
 
-  constructor(messages: Array<Message>) {
+  constructor(messages: Message) {
     this.messages = messages;
     this.label = new Label();
   }
 
-  addMessage(message: Message): void {
-    this.messages.push(message);
-    this.determineFirstAppearance(message);
+  addMessageRaw(splitLine: string[], csvStructure): void {
+    this.messages.addMessageRaw(splitLine, csvStructure);
   }
 
   addLabel(label: Label): void {
     this.label = label;
   }
 
-  sortMessageByDate(): void {
-    this.messages.sort((a, b) => {
-      return Date.parse(a.time) - Date.parse(b.time);
-    });
-  }
-
-  populateTrace(): void {
-    this.messages.forEach(value => this.addPointToTrace(new LatLng(Number(value.latitude), Number(value.longitude))));
-  }
-
-  addPointToTrace(latLng: LatLng): void {
-    this.trace.push(latLng);
-  }
-
   getMMSI(): string {
-    if (this.messages.length === 0) {
-      return undefined;
-    }
     return this.messages[0].mmsi;
   }
 
   getName(): string {
-    return this.messages[0].vesselName;
+    return this.messages[0].vesselName[0];
   }
 
   getColor(): string {
     return '#' + (+this.getMMSI()).toString(16).substr(0, 6);
   }
 
-  private determineFirstAppearance(message: Message): void {
-    const timeInS = message.getTimeInS();
-    if (this.firstAppearance === undefined || this.firstAppearance > timeInS) {
-      this.firstAppearance = timeInS;
-    }
+  private getFirstAppearance(): string {
+    return this.messages.time[0];
   }
 
   getVesselSetRegardingTime(time: number): Vessel {
@@ -67,7 +43,7 @@ export class Vessel {
       resultVessel = this.getMessageInRange(time);
       this.nextIndex(time);
       if (this.previousIndexIncreaseValue !== this.indexIncrease ||
-        this.currentSelectedMessageIndex === 0 || this.currentSelectedMessageIndex >= this.messages.length - 1) {
+        this.currentSelectedMessageIndex === 0 || this.currentSelectedMessageIndex >= this.messages.latitude.length - 1) {
         this.indexIncrease = this.previousIndexIncreaseValue;
         break;
       }
@@ -87,16 +63,17 @@ export class Vessel {
     } else {
       this.indexIncrease = true;
       this.currentSelectedMessageIndex++;
-      if (this.currentSelectedMessageIndex >= this.messages.length) {
-        this.currentSelectedMessageIndex = this.messages.length - 1;
+      if (this.currentSelectedMessageIndex >= this.messages.latitude.length) {
+        this.currentSelectedMessageIndex = this.messages.latitude.length - 1;
       }
     }
   }
 
   private getMessageInRange(time: number): Vessel {
     if (this.isMessageInRange(time)) {
-      return new Vessel(new Array<Message>(this.messages[this.currentSelectedMessageIndex]));
+      // return new Vessel(new Array<Message>(this.messages[this.currentSelectedMessageIndex]));
     }
+    return undefined;
   }
 
   private isMessageInRange(time: number): boolean {
