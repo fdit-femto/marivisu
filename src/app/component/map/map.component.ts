@@ -165,9 +165,9 @@ export class MapComponent implements OnInit {
         };
 
       }
-      messagesToDisplay.lat.push(vessel.messages.latitude);
-      messagesToDisplay.lon.push(vessel.messages.longitude);
-      messagesToDisplay.text = vessel.messages.tooltip;
+      messagesToDisplay.lat = vessel.messages.latitude;
+      messagesToDisplay.lon = vessel.messages.longitude;
+      // messagesToDisplay.text = vessel.messages.tooltip;
       this.graph.data.push(messagesToDisplay);
     }));
   }

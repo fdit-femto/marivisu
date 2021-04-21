@@ -22,11 +22,11 @@ export class Vessel {
   }
 
   getMMSI(): string {
-    return this.messages[0].mmsi;
+    return this.messages.mmsi;
   }
 
   getName(): string {
-    return this.messages[0].vesselName[0];
+    return this.messages.vesselName[0];
   }
 
   getColor(): string {

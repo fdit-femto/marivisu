@@ -3,33 +3,40 @@ import {CsvStructure} from './csv-structure';
 export class Message {
 
   constructor(splitLine: string[], csvStructure: CsvStructure) {
+    if (csvStructure === undefined) {
+      return;
+    }
     this.setMmsi(csvStructure.mmsiIndex, splitLine);
     this.addMessageRaw(splitLine, csvStructure);
   }
 
-  mmsi: string;
-  time: Array<string>;
-  relaiveTimeInS: Array<number>;
-  latitude: Array<string>;
-  longitude: Array<string>;
-  speedOverGround: Array<string>;
-  courseOverGround: Array<string>;
-  heading: Array<string>;
-  vesselName: Array<string>;
-  imo: Array<string>;
-  callSign: Array<string>;
-  vesselType: Array<string>;
-  status: Array<string>;
-  length: Array<string>;
-  width: Array<string>;
-  draft: Array<string>;
-  cargo: Array<string>;
-  tooltip: Array<string>;
+  mmsi = '';
+  time: Array<string> = new Array<string>();
+  relativeTimeInS: Array<number> = new Array<number>();
+  latitude: Array<string> = new Array<string>();
+  longitude: Array<string> = new Array<string>();
+  speedOverGround: Array<string> = new Array<string>();
+  courseOverGround: Array<string> = new Array<string>();
+  heading: Array<string> = new Array<string>();
+  vesselName: Array<string> = new Array<string>();
+  imo: Array<string> = new Array<string>();
+  callSign: Array<string> = new Array<string>();
+  vesselType: Array<string> = new Array<string>();
+  status: Array<string> = new Array<string>();
+  length: Array<string> = new Array<string>();
+  width: Array<string> = new Array<string>();
+  draft: Array<string> = new Array<string>();
+  cargo: Array<string> = new Array<string>();
+  tooltip: Array<string> = new Array<string>();
 
   private static secondsToReadableString(seconds: number): string {
     const date = new Date(seconds * 1000);
     return date.getUTCDay() + '/' + date.getUTCMonth() + '/' + date.getUTCFullYear() + ' ' + date.getUTCHours() + ':' +
       date.getUTCMinutes() + ':' + date.getUTCSeconds();
+  }
+
+  static messageEmpty(): Message {
+    return new Message(new Array<string>(), undefined);
   }
 
   addMessageRaw(splitLine: string[], csvStructure): void {
