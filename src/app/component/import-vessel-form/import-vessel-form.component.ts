@@ -5,7 +5,6 @@ import {ClientService} from '../../service/client-service.service';
 import {VesselsService} from '../../service/vessels.service';
 import {Vessels} from '../../model/vessels';
 import {interval, Observable} from 'rxjs';
-import {Message} from '../../model/message';
 import {CsvStructure} from '../../model/csv-structure';
 
 @Component({
@@ -45,10 +44,9 @@ export class ImportVesselFormComponent implements OnInit {
   }
 
 
-
   private addLabel(label: any): void {
     label.forEach(element => {
-      if (this.vessels.vessels.get(element.mmsi) !== undefined){
+      if (this.vessels.vessels.get(element.mmsi) !== undefined) {
         this.vessels.vessels.get(element.mmsi).addLabel(element);
         this.vessels.addLabel(element.mmsi);
       }
@@ -94,18 +92,20 @@ export class ImportVesselFormComponent implements OnInit {
   formatJsonToCsv(json: any): string {
     let csv = '';
     console.log(json);
-    if (!Array.isArray(json)) {
-      json = JSON.parse(json);
+    try {
+      if (!Array.isArray(json)) {
+        json = JSON.parse(json);
+      }
+      json.forEach(element => {
+        csv = csv.concat(element.MMSI, ',');
+        csv = csv.concat(element.timestamp, ',');
+        csv = csv.concat(element.LAT, ',');
+        csv = csv.concat(element.LON, ',');
+        csv = csv.concat(element.SOG, '\n');
+      });
+    } catch (e) {
+      console.log('not a Json');
     }
-
-    json.forEach(element => {
-      csv = csv.concat(element.MMSI, ',');
-      csv = csv.concat(element.timestamp, ',');
-      csv = csv.concat(element.LAT, ',');
-      csv = csv.concat(element.LON, ',');
-      csv = csv.concat(element.SOG, '\n');
-    });
-
 
     return csv;
   }
