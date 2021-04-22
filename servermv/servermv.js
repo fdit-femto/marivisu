@@ -95,9 +95,9 @@ server.get('/label', (request, response) => {
 function sendDataMessages() {
   let dataToSend = [];
 
-  newDataVessels.forEach(element => {
+  dataVessels.forEach(element => {
     if (element.label === {}) {
-      dataToSend = newDataVessels.concat(element.data.messages[element.data.messages.length - 1])
+      dataToSend = dataToSend.concat(element.data.messages[element.data.messages.length - 1])
     } else {
       dataToSend = dataToSend.concat(element.data.messages)
     }

@@ -50,8 +50,6 @@ export class MapComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
-
     this.initMap();
     this.connectVesselObservable();
     this.connectSelectVesselObservable();
@@ -110,6 +108,7 @@ export class MapComponent implements OnInit {
   }
 
   updateMap(): void {
+    this.graph.data = [];
     this.graph.data = [{
       name: '',
       type: 'scattermapbox',

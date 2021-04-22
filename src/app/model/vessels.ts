@@ -9,7 +9,6 @@ export class Vessels {
   vesselsLabeled: string[];
   firstAppearance: number;
   lastAppearance: number;
-  // tslint:disable-next-line:variable-name
   private numberOfMessages: number;
 
   constructor() {
@@ -21,6 +20,13 @@ export class Vessels {
 
   get size(): number {
     return this.numberOfMessages;
+  }
+
+  clear(): void {
+    this.vessels = new Map<number, Vessel>();
+    this.newVessels = new Map<number, Vessel>();
+    this.numberOfMessages = 0;
+    this.vesselsLabeled = [];
   }
 
   addMessage(splitLine, csvStructure: CsvStructure): void {
