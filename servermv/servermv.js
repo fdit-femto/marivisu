@@ -69,7 +69,6 @@ server.post('/api/send_data', (request, response) => {
 server.post('/data/label', (request, response) => {
   let dataReceived = JSON.parse(JSON.parse(request.rawBody));
   dataReceived.forEach(element => {
-    // dataVessels.get(dataReceived.MMSI).data.label = element
     labels.set(element.MMSI, new SLabel(element.MMSI, element.timestamp, element.LAT, element.LON, labelType.ASD))
   })
   response.sendStatus(200);
@@ -96,11 +95,7 @@ function sendDataMessages() {
   let dataToSend = [];
 
   dataVessels.forEach(element => {
-    if (element.label === {}) {
-      dataToSend = dataToSend.concat(element.data.messages[element.data.messages.length - 1])
-    } else {
-      dataToSend = dataToSend.concat(element.data.messages)
-    }
+    dataToSend = dataToSend.concat(element.data.messages[element.data.messages.length - 1])
   })
   console.log('data sent : \n', dataToSend.length, '\n')
   // console.log('data sent : \n', dataToSend, '\n')
