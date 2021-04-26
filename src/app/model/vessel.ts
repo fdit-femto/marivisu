@@ -29,6 +29,10 @@ export class Vessel {
     return this.messages.vesselName[0];
   }
 
+  getLabel(): string {
+    return this.label.type.toString();
+  }
+
   getColor(): string {
     return '#' + (+this.getMMSI()).toString(16).substr(0, 6);
   }

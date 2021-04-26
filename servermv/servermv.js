@@ -98,7 +98,6 @@ function sendDataMessages() {
     dataToSend = dataToSend.concat(element.data.messages[element.data.messages.length - 1])
   })
   console.log('data sent : \n', dataToSend.length, '\n')
-  // console.log('data sent : \n', dataToSend, '\n')
   return dataToSend;
 }
 
@@ -108,7 +107,6 @@ function sendDataLabel() {
   labels.forEach(element => {
     dataToSend = dataToSend.concat(element)
   })
-  // console.log('data sent : \n' , dataToSend.length, '\n')
   console.log('data sent : \n', dataToSend, '\n')
   return dataToSend;
 }
