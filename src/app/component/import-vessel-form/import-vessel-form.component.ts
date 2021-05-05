@@ -53,13 +53,6 @@ export class ImportVesselFormComponent implements OnInit {
     });
   }
 
-  onSubmit(): void {
-    this.clientService.setClient(this.client, this.isFDITMode);
-    this.vessels = new Vessels();
-    this.vesselsService.changeAllVesselsSet(this.vessels);
-    this.submit();
-  }
-
   submit(): void {
     let vesselsString = '';
     let vesselslabel = '';
@@ -87,6 +80,13 @@ export class ImportVesselFormComponent implements OnInit {
       pauseOnHover: true
     });
     this.submitted = true;
+  }
+
+  onSubmit(): void {
+    this.clientService.setClient(this.client, this.isFDITMode);
+    this.vessels = new Vessels();
+    this.vesselsService.changeAllVesselsSet(this.vessels);
+    this.submit();
   }
 
   formatJsonToCsv(json: any): string {

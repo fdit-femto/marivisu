@@ -125,6 +125,13 @@ serverExFDIT.listen(portFDIT, () => {
   console.log(`FDIT client listening at http://localhost:${portFDIT}`)
 })
 
+serverExFDIT.get('/client/getMessages', (request, response) => {
+  console.log(`getMessages.`)
+  let vesselsToSend = vesselsData
+  response.json(vesselsToSend)
+  vesselsData = diff(vesselsToSend, vesselsData)
+})
+
 serverExFDIT.get('/', (request, response) => {
   response.send('Server is up!')
 })
@@ -134,14 +141,6 @@ serverExFDIT.post('/client/startClient', (request, response) => {
   const client = request.body
   startClient(client)
 });
-
-serverExFDIT.get('/client/getMessages', (request, response) => {
-  console.log(`getMessages.`)
-
-  let vesselsToSend = vesselsData
-  response.json(vesselsToSend)
-  vesselsData = diff(vesselsToSend, vesselsData)
-})
 
 
 function startClient(clientModel) {
