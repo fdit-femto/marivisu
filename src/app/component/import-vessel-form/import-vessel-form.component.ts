@@ -59,10 +59,12 @@ export class ImportVesselFormComponent implements OnInit {
     this.interval = interval(5000);
     this.requestSender = interval(5000).subscribe(() => {
       this.clientService.getVessels().subscribe((data: string) => vesselsString = data);
-      this.clientService.getLabel().subscribe((data: string) => vesselslabel = data);
-      this.vessels.clear();
+      if (this.isFDITMode === 'false') {
+        this.clientService.getLabel().subscribe((data: string) => vesselslabel = data);
+      }
       if (vesselsString !== '') {
         if (this.isFDITMode === 'false') {
+          this.vessels.clear();
           vesselsString = this.formatJsonToCsv(vesselsString);
           this.addVessels(vesselsString);
           if (Array.isArray(vesselslabel) && vesselslabel.length !== 0) {
