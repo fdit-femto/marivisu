@@ -5,7 +5,6 @@ import {SelectedVesselService} from '../../service/selected-vessel.service';
 import {Vessel} from '../../model/vessel';
 import * as PlotlyJS from 'plotly.js/dist/plotly.js';
 import {PlotlyModule} from 'angular-plotly.js';
-import {LabelType} from '../../model/label-type.enum';
 
 PlotlyModule.plotlyjs = PlotlyJS;
 
@@ -117,58 +116,32 @@ export class MapComponent implements OnInit {
       lon: [],
       marker: {color: 'fuchsia', size: 14}
     }];
+    let messagesToDisplay = {
+      name: null,
+      type: null,
+      text: null,
+      lat: [],
+      lon: [],
+      mode: null,
+      marker: {color: null, size: null, width: null}
+    };
 
-    this.vessels.vessels.forEach(((vessel) => {
-      let color: string;
-      let size: number;
-      let messagesToDisplay = {
-        name: null,
-        type: null,
-        text: null,
-        lat: [],
-        lon: [],
-        mode: null,
-        marker: {color: null, size: null, width: null}
-      };
-      if (this.selectedVessel.getMMSI() === vessel.getMMSI()) {
-        color = 'red';
-        size = 10;
-      } else {
-        color = vessel.getColor();
-        size = 4;
-      }
-      if (vessel.label.type === LabelType.DEC) {
-        const text = 'mmsi: ' + vessel.getMMSI() + '  ASD';
-        // type = 'scattergeo';
-        messagesToDisplay = {
-          name: '',
-          type: 'scattermapbox',
-          text,
-          lat: [],
-          lon: [],
-          mode: 'points',
-          // @ts-ignore
-          marker: {color: 'red', size: 7}
-        };
-      } else {
-        // type = 'scattermapbox';
-        messagesToDisplay = {
-          name: '',
-          type: 'scattermapbox',
-          text: 'mmsi: ' + vessel.getMMSI(),
-          lat: [],
-          lon: [],
-          mode: 'points',
-          // @ts-ignore
-          marker: {color, size}
-        };
 
-      }
-      messagesToDisplay.lat = vessel.messages.latitude;
-      messagesToDisplay.lon = vessel.messages.longitude;
-      messagesToDisplay.text = vessel.messages.tooltip;
-      this.graph.data.push(messagesToDisplay);
-    }));
+    // type = 'scattermapbox';
+    messagesToDisplay = {
+      name: '',
+      type: 'scattermapbox',
+      lat: [],
+      lon: [],
+      mode: 'points',
+      // @ts-ignore
+      marker: {size: 1}
+    };
+
+    messagesToDisplay.lat = this.vessels.messages.latitude;
+    messagesToDisplay.lon = this.vessels.messages.longitude;
+    messagesToDisplay.text = this.vessels.messages.tooltip;
+    this.graph.data.push(messagesToDisplay);
   }
 
 

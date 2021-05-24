@@ -30,6 +30,7 @@ export class ImportVesselFormComponent implements OnInit {
     const lines: string[] = vesselsString.split('\n');
     let csvStructure: CsvStructure;
     csvStructure = new CsvStructure();
+    console.log(lines.length);
     for (let line of lines) {
       line = line.replace(/[^\x20-\x7F]/g, '');
       const splitLine = line.split(',');
@@ -66,7 +67,10 @@ export class ImportVesselFormComponent implements OnInit {
         if (this.isFDITMode === 'false') {
           this.vessels.clear();
           vesselsString = this.formatJsonToCsv(vesselsString);
+
           this.addVessels(vesselsString);
+
+
           if (Array.isArray(vesselslabel) && vesselslabel.length !== 0) {
             this.addLabel(vesselslabel);
           }
@@ -93,7 +97,7 @@ export class ImportVesselFormComponent implements OnInit {
 
   formatJsonToCsv(json: any): string {
     let csv = '';
-    console.log(json);
+    // console.log(json);
     try {
       if (!Array.isArray(json)) {
         json = JSON.parse(json);
@@ -106,7 +110,7 @@ export class ImportVesselFormComponent implements OnInit {
         csv = csv.concat(element.SOG, '\n');
       });
     } catch (e) {
-      console.log('not a Json');
+      // console.log('not a Json');
     }
 
     return csv;

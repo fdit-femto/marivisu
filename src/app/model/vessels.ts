@@ -6,6 +6,9 @@ export class Vessels {
   allVessels: Map<number, Vessel>;
   vessels: Map<number, Vessel>;
   newVessels: Map<number, Vessel>;
+
+  messages: Message;
+
   vesselsLabeled: string[];
   firstAppearance: number;
   lastAppearance: number;
@@ -14,6 +17,7 @@ export class Vessels {
   constructor() {
     this.vessels = new Map<number, Vessel>();
     this.newVessels = new Map<number, Vessel>();
+    this.messages = new Message(undefined, undefined);
     this.numberOfMessages = 0;
     this.vesselsLabeled = [];
   }
@@ -36,6 +40,7 @@ export class Vessels {
     } else {
       this.vessels.get(Number(splitLine[csvStructure.mmsiIndex])).addMessageRaw(splitLine, csvStructure);
     }
+    this.messages.addMessageRaw(splitLine, csvStructure);
     this.determineFirstAppearance(splitLine[csvStructure.timeIndex]);
     this.determineLastAppearance(splitLine[csvStructure.timeIndex]);
     this.numberOfMessages++;

@@ -22,7 +22,7 @@ export class Vessel {
   }
 
   getMMSI(): string {
-    return this.messages.mmsi;
+    return this.messages.mmsi[0];
   }
 
   getName(): string {

@@ -10,7 +10,7 @@ export class Message {
     this.addMessageRaw(splitLine, csvStructure);
   }
 
-  mmsi = '';
+  mmsi: Array<string> = new Array<string>();
   time: Array<string> = new Array<string>();
   relativeTimeInS: Array<number> = new Array<number>();
   latitude: Array<string> = new Array<string>();
@@ -64,7 +64,7 @@ export class Message {
 
   private setMmsi(index, splitLine: string[]): void {
     if (index !== undefined) {
-      this.mmsi = splitLine[index];
+      this.mmsi.push(splitLine[index]);
     }
   }
 

@@ -63,10 +63,12 @@ export class ImportVesselsComponent implements OnInit {
   }
 
   uploadFiles(index: number): void {
+
     let nbLine: number;
     const csvStructure = new CsvStructure();
     const fileReader = new FileReader();
     fileReader.onload = () => {
+
       const lines: string[] = (fileReader.result as string).split('\n');
       nbLine = lines.length;
       this.vessels = new Vessels();
@@ -80,6 +82,8 @@ export class ImportVesselsComponent implements OnInit {
         this.vessels.addMessage(splitLine, csvStructure);
       }
       this.vesselsService.changeAllVesselsSet(this.vessels);
+
+
     };
 
     fileReader.onprogress = (e) => {
