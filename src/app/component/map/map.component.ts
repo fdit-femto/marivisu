@@ -135,7 +135,7 @@ export class MapComponent implements OnInit {
       lon: [],
       mode: 'points',
       // @ts-ignore
-      marker: {size: 1}
+      marker: {size: 3, color: 'black'}
     };
 
     messagesToDisplay.lat = this.vessels.messages.latitude;

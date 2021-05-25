@@ -57,8 +57,8 @@ export class ImportVesselFormComponent implements OnInit {
   submit(): void {
     let vesselsString = '';
     let vesselslabel = '';
-    this.interval = interval(5000);
-    this.requestSender = interval(5000).subscribe(() => {
+    this.interval = interval(1000);
+    this.requestSender = interval(1000).subscribe(() => {
       this.clientService.getVessels().subscribe((data: string) => vesselsString = data);
       if (this.isFDITMode === 'false') {
         this.clientService.getLabel().subscribe((data: string) => vesselslabel = data);
