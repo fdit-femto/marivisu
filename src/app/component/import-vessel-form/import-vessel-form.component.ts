@@ -67,10 +67,7 @@ export class ImportVesselFormComponent implements OnInit {
         if (this.isFDITMode === 'false') {
           this.vessels.clear();
           vesselsString = this.formatJsonToCsv(vesselsString);
-
           this.addVessels(vesselsString);
-
-
           if (Array.isArray(vesselslabel) && vesselslabel.length !== 0) {
             this.addLabel(vesselslabel);
           }

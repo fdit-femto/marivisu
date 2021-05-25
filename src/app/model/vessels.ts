@@ -7,6 +7,7 @@ export class Vessels {
   vessels: Map<number, Vessel>;
   newVessels: Map<number, Vessel>;
 
+
   messages: Message;
 
   vesselsLabeled: string[];

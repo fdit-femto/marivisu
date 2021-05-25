@@ -10,6 +10,7 @@ export class Message {
     this.addMessageRaw(splitLine, csvStructure);
   }
 
+  index: Map<string, number> = new Map<string, number>();
   mmsi: Array<string> = new Array<string>();
   time: Array<string> = new Array<string>();
   relativeTimeInS: Array<number> = new Array<number>();
@@ -40,6 +41,7 @@ export class Message {
   }
 
   addMessageRaw(splitLine: string[], csvStructure): void {
+    this.setMmsi(csvStructure.mmsiIndex, splitLine);
     this.setTime(csvStructure.timeIndex, splitLine);
     this.setLatitude(csvStructure.latitudeIndex, splitLine);
     this.setLongitude(csvStructure.longitudeIndex, splitLine);
@@ -56,6 +58,35 @@ export class Message {
     this.setDraft(csvStructure.draftIndex, splitLine);
     this.setCargo(csvStructure.cargoIndex, splitLine);
     this.setTooltip(csvStructure, splitLine);
+  }
+
+  addMessageRawRealTime(splitLine: string[], csvStructure): void {
+    const index = this.index.get(splitLine[csvStructure.mmsiIndex]);
+    if (index === undefined) {
+      this.addMessageRaw(splitLine, csvStructure);
+    } else {
+      this.replace(splitLine, csvStructure, index);
+    }
+  }
+
+  replace(splitLine: string[], csvStructure, index): void {
+    this.mmsi[index] = splitLine[csvStructure.mmsiIndex];
+    this.time[index] = splitLine[csvStructure.timeIndex];
+    this.latitude[index] = splitLine[csvStructure.latitudeIndex];
+    this.longitude[index] = splitLine[csvStructure.longitudeIndex];
+    this.speedOverGround[index] = splitLine[csvStructure.speedOverGroundIndex];
+    this.courseOverGround[index] = splitLine[csvStructure.courseOverGroundIndex];
+    this.heading[index] = splitLine[csvStructure.headingIndex];
+    this.vesselName[index] = splitLine[csvStructure.vesselNameIndex];
+    this.imo[index] = splitLine[csvStructure.imoIndex];
+    this.callSign[index] = splitLine[csvStructure.callSignIndex];
+    this.vesselType[index] = splitLine[csvStructure.vesselTypeIndex];
+    this.status[index] = splitLine[csvStructure.statusIndex];
+    this.length[index] = splitLine[csvStructure.lengthIndex];
+    this.width[index] = splitLine[csvStructure.widthIndex];
+    this.draft[index] = splitLine[csvStructure.draftIndex];
+    this.cargo[index] = splitLine[csvStructure.cargoIndex];
+    this.updateTooltip(csvStructure, splitLine, index);
   }
 
   size(): number {
@@ -162,5 +193,11 @@ export class Message {
     const tooltipText = splitLine[csvStructure.mmsiIndex] + '<br>time: ' +
       Message.secondsToReadableString(Number(splitLine[csvStructure.timeIndex]));
     this.tooltip.push(tooltipText);
+  }
+
+  private updateTooltip(csvStructure: CsvStructure, splitLine: string[], index): void {
+    const tooltipText = splitLine[csvStructure.mmsiIndex] + '<br>time: ' +
+      Message.secondsToReadableString(Number(splitLine[csvStructure.timeIndex]));
+    this.tooltip[index] = tooltipText;
   }
 }
