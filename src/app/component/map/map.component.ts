@@ -5,6 +5,10 @@ import {SelectedVesselService} from '../../service/selected-vessel.service';
 import {Vessel} from '../../model/vessel';
 import * as PlotlyJS from 'plotly.js/dist/plotly.js';
 import {PlotlyModule} from 'angular-plotly.js';
+import {ModeService} from '../../service/mode.service';
+import {Mode} from '../../model/mode';
+import {ModeEnum} from '../../enum/mode-enum.enum';
+import {LabelType} from '../../model/label-type.enum';
 
 PlotlyModule.plotlyjs = PlotlyJS;
 
@@ -16,6 +20,7 @@ PlotlyModule.plotlyjs = PlotlyJS;
 export class MapComponent implements OnInit {
   vessels: Vessels;
   selectedVessel: Vessel;
+  mode: Mode;
   highlightedMarkerOldCharacteristic = {
     id: '',
     color: ''
@@ -45,7 +50,8 @@ export class MapComponent implements OnInit {
     },
   };
 
-  constructor(private vesselsService: VesselsService, private selectedVesselService: SelectedVesselService) {
+  constructor(private vesselsService: VesselsService, private selectedVesselService: SelectedVesselService,
+              private modeService: ModeService) {
   }
 
   ngOnInit(): void {
@@ -54,10 +60,21 @@ export class MapComponent implements OnInit {
     this.connectSelectVesselObservable();
   }
 
+  connectModeObservable(): void {
+    this.modeService.currentMode.subscribe(mode => {
+        this.mode = mode;
+      }
+    );
+  }
+
   connectVesselObservable(): void {
     this.vesselsService.currentVessels.subscribe(vessels => {
       this.vessels = vessels;
-      this.updateMap();
+      if (this.mode.value === ModeEnum.STATIC) {
+        this.updateMap();
+      } else {
+        this.updateMapRealTime();
+      }
     });
   }
 
@@ -107,6 +124,70 @@ export class MapComponent implements OnInit {
   }
 
   updateMap(): void {
+    this.graph.data = [];
+    this.graph.data = [{
+      name: '',
+      type: 'scattermapbox',
+      text: '',
+      lat: [],
+      lon: [],
+      marker: {color: 'fuchsia', size: 14}
+    }];
+
+    this.vessels.vessels.forEach(((vessel) => {
+      let color: string;
+      let size: number;
+      let messagesToDisplay = {
+        name: null,
+        type: null,
+        text: null,
+        lat: [],
+        lon: [],
+        mode: null,
+        marker: {color: null, size: null, width: null}
+      };
+      if (this.selectedVessel.getMMSI() === vessel.getMMSI()) {
+        color = 'red';
+        size = 10;
+      } else {
+        color = vessel.getColor();
+        size = 4;
+      }
+      if (vessel.label.type === LabelType.DEC) {
+        const text = 'mmsi: ' + vessel.getMMSI() + '  ASD';
+        // type = 'scattergeo';
+        messagesToDisplay = {
+          name: '',
+          type: 'scattermapbox',
+          text,
+          lat: [],
+          lon: [],
+          mode: 'points',
+          // @ts-ignore
+          marker: {color: 'red', size: 7}
+        };
+      } else {
+        // type = 'scattermapbox';
+        messagesToDisplay = {
+          name: '',
+          type: 'scattermapbox',
+          text: 'mmsi: ' + vessel.getMMSI(),
+          lat: [],
+          lon: [],
+          mode: 'points',
+          // @ts-ignore
+          marker: {color, size}
+        };
+
+      }
+      messagesToDisplay.lat = vessel.messages.latitude;
+      messagesToDisplay.lon = vessel.messages.longitude;
+      messagesToDisplay.text = vessel.messages.tooltip;
+      this.graph.data.push(messagesToDisplay);
+    }));
+  }
+
+  updateMapRealTime(): void {
     this.graph.data = [];
     this.graph.data = [{
       name: '',

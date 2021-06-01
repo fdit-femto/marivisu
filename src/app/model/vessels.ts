@@ -41,7 +41,7 @@ export class Vessels {
     } else {
       this.vessels.get(Number(splitLine[csvStructure.mmsiIndex])).addMessageRaw(splitLine, csvStructure);
     }
-    this.messages.addMessageRaw(splitLine, csvStructure);
+    this.messages.addMessageRawRealTime(splitLine, csvStructure);
     this.determineFirstAppearance(splitLine[csvStructure.timeIndex]);
     this.determineLastAppearance(splitLine[csvStructure.timeIndex]);
     this.numberOfMessages++;
@@ -91,7 +91,6 @@ export class Vessels {
 
     if (vessel === undefined) {
       return undefined;
-      // vessel = new Vessel(new Array<Message>());
     }
 
     return vessel;

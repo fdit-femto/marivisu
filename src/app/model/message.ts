@@ -196,8 +196,7 @@ export class Message {
   }
 
   private updateTooltip(csvStructure: CsvStructure, splitLine: string[], index): void {
-    const tooltipText = splitLine[csvStructure.mmsiIndex] + '<br>time: ' +
+    this.tooltip[index] = splitLine[csvStructure.mmsiIndex] + '<br>time: ' +
       Message.secondsToReadableString(Number(splitLine[csvStructure.timeIndex]));
-    this.tooltip[index] = tooltipText;
   }
 }
