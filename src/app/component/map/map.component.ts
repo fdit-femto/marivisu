@@ -55,16 +55,20 @@ export class MapComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.initMap();
+    this.connectModeObservable();
     this.connectVesselObservable();
     this.connectSelectVesselObservable();
+    this.initMap();
   }
 
-  connectModeObservable(): void {
-    this.modeService.currentMode.subscribe(mode => {
-        this.mode = mode;
+  connectSelectVesselObservable(): void {
+    this.selectedVesselService.currentVessel.subscribe(vessels => {
+      this.selectedVessel = vessels;
+      const mmsi = this.selectedVessel.getMMSI();
+      if (mmsi !== undefined) {
+        this.highlightMarker(this.selectedVessel.getMMSI());
       }
-    );
+    });
   }
 
   connectVesselObservable(): void {
@@ -78,14 +82,27 @@ export class MapComponent implements OnInit {
     });
   }
 
-  connectSelectVesselObservable(): void {
-    this.selectedVesselService.currentVessel.subscribe(vessels => {
-      this.selectedVessel = vessels;
-      const mmsi = this.selectedVessel.getMMSI();
-      if (mmsi !== undefined) {
-        this.highlightMarker(this.selectedVessel.getMMSI());
+  connectModeObservable(): void {
+    this.modeService.currentMode.subscribe(mode => {
+        this.mode = mode;
       }
-    });
+    );
+  }
+
+  highlightMarker(mmsi: string): void {
+    if (this.highlightedMarkerOldCharacteristic.id !== '') {
+      const previousHighlighted = this.graph.data.find(element => element.text === this.highlightedMarkerOldCharacteristic.id);
+      if (previousHighlighted !== undefined) {
+        previousHighlighted.marker.color = this.highlightedMarkerOldCharacteristic.color;
+        previousHighlighted.marker.size = 4;
+      }
+    }
+    const newHighlighted = this.graph.data.find(element => element.text === mmsi);
+    this.highlightedMarkerOldCharacteristic.id = mmsi;
+    this.highlightedMarkerOldCharacteristic.color = newHighlighted.marker.color;
+    newHighlighted.marker.size = 10;
+    newHighlighted.marker.color = 'red';
+
   }
 
   initMap(): void {
@@ -107,20 +124,42 @@ export class MapComponent implements OnInit {
 
   }
 
-  highlightMarker(mmsi: string): void {
-    if (this.highlightedMarkerOldCharacteristic.id !== '') {
-      const previousHighlighted = this.graph.data.find(element => element.text === this.highlightedMarkerOldCharacteristic.id);
-      if (previousHighlighted !== undefined) {
-        previousHighlighted.marker.color = this.highlightedMarkerOldCharacteristic.color;
-        previousHighlighted.marker.size = 4;
-      }
-    }
-    const newHighlighted = this.graph.data.find(element => element.text === mmsi);
-    this.highlightedMarkerOldCharacteristic.id = mmsi;
-    this.highlightedMarkerOldCharacteristic.color = newHighlighted.marker.color;
-    newHighlighted.marker.size = 10;
-    newHighlighted.marker.color = 'red';
+  updateMapRealTime(): void {
+    this.graph.data = [];
+    this.graph.data = [{
+      name: '',
+      type: 'scattermapbox',
+      text: '',
+      lat: [],
+      lon: [],
+      marker: {color: 'fuchsia', size: 14}
+    }];
+    let messagesToDisplay = {
+      name: null,
+      type: null,
+      text: null,
+      lat: [],
+      lon: [],
+      mode: null,
+      marker: {color: null, size: null, width: null}
+    };
 
+
+    // type = 'scattermapbox';
+    messagesToDisplay = {
+      name: '',
+      type: 'scattermapbox',
+      lat: [],
+      lon: [],
+      mode: 'points',
+      // @ts-ignore
+      marker: {size: 3, color: 'black'}
+    };
+
+    messagesToDisplay.lat = this.vessels.messages.latitude;
+    messagesToDisplay.lon = this.vessels.messages.longitude;
+    messagesToDisplay.text = this.vessels.messages.tooltip;
+    this.graph.data.push(messagesToDisplay);
   }
 
   updateMap(): void {
@@ -185,44 +224,6 @@ export class MapComponent implements OnInit {
       messagesToDisplay.text = vessel.messages.tooltip;
       this.graph.data.push(messagesToDisplay);
     }));
-  }
-
-  updateMapRealTime(): void {
-    this.graph.data = [];
-    this.graph.data = [{
-      name: '',
-      type: 'scattermapbox',
-      text: '',
-      lat: [],
-      lon: [],
-      marker: {color: 'fuchsia', size: 14}
-    }];
-    let messagesToDisplay = {
-      name: null,
-      type: null,
-      text: null,
-      lat: [],
-      lon: [],
-      mode: null,
-      marker: {color: null, size: null, width: null}
-    };
-
-
-    // type = 'scattermapbox';
-    messagesToDisplay = {
-      name: '',
-      type: 'scattermapbox',
-      lat: [],
-      lon: [],
-      mode: 'points',
-      // @ts-ignore
-      marker: {size: 3, color: 'black'}
-    };
-
-    messagesToDisplay.lat = this.vessels.messages.latitude;
-    messagesToDisplay.lon = this.vessels.messages.longitude;
-    messagesToDisplay.text = this.vessels.messages.tooltip;
-    this.graph.data.push(messagesToDisplay);
   }
 
 
