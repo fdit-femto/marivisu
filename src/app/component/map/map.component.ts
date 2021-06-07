@@ -134,6 +134,7 @@ export class MapComponent implements OnInit {
       lon: [],
       marker: {color: 'fuchsia', size: 14}
     }];
+
     let messagesToDisplay = {
       name: null,
       type: null,

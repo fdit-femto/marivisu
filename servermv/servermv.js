@@ -116,7 +116,7 @@ function sendDataLabel() {
 const serverExFDIT = express()
 const client = new net.Socket();
 
-serverExFDIT.use(cors())
+serverExFDIT.use(cors());
 serverExFDIT.use(bodyParser.json());
 const portFDIT = 3800
 let vesselsData = '';
@@ -130,18 +130,18 @@ serverExFDIT.get('/', (request, response) => {
 })
 
 serverExFDIT.get('/client/getMessages', (request, response) => {
-  console.log(`getMessages.`)
-  let vesselsToSend = vesselsData
-  response.json(vesselsToSend)
-  vesselsData = diff(vesselsToSend, vesselsData)
+  response.json(vesselsData)
 })
 
 serverExFDIT.post('/client/startClient', (request, response) => {
   console.log(`Starting client.`)
-  const client = request.body
-  startClient(client)
+  startClient(request.body)
 });
 
+
+function diff(strToRemove, str) {
+  return str.split(strToRemove).join('')
+}
 
 function startClient(clientModel) {
   client.connect(clientModel.port, clientModel.ip, function () {
@@ -149,13 +149,8 @@ function startClient(clientModel) {
   });
 
   client.on('data', function (data) {
-    console.log("receive data")
     vesselsData += data;
-    console.log('Received: ' + data);
     console.log(vesselsData);
+    console.log('Received: ' + data);
   });
-}
-
-function diff(strToRemove, str) {
-  return str.split(strToRemove).join('')
 }
