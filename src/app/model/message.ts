@@ -1,13 +1,14 @@
 import {CsvStructure} from './csv-structure';
+import {LabelType} from './label-type.enum';
 
 export class Message {
 
-  constructor(splitLine: string[], csvStructure: CsvStructure) {
+  constructor(splitLine: string[], csvStructure: CsvStructure, vesselsLabeled: string[]) {
     if (csvStructure === undefined) {
       return;
     }
     this.setMmsi(csvStructure.mmsiIndex, splitLine);
-    this.addMessageRaw(splitLine, csvStructure);
+    this.addMessageRaw(splitLine, csvStructure, vesselsLabeled);
   }
 
   index: Map<string, number> = new Map<string, number>();
@@ -29,6 +30,7 @@ export class Message {
   draft: Array<string> = new Array<string>();
   cargo: Array<string> = new Array<string>();
   tooltip: Array<string> = new Array<string>();
+  label: Array<LabelType> = new Array<LabelType>();
 
   private static secondsToReadableString(seconds: number): string {
     const date = new Date(seconds * 1000);
@@ -37,10 +39,10 @@ export class Message {
   }
 
   static messageEmpty(): Message {
-    return new Message(new Array<string>(), undefined);
+    return new Message(new Array<string>(), undefined, undefined);
   }
 
-  addMessageRaw(splitLine: string[], csvStructure): void {
+  addMessageRaw(splitLine: string[], csvStructure, vesselsLabeled: string[]): void {
     this.setMmsi(csvStructure.mmsiIndex, splitLine);
     this.setTime(csvStructure.timeIndex, splitLine);
     this.setLatitude(csvStructure.latitudeIndex, splitLine);
@@ -57,13 +59,15 @@ export class Message {
     this.setWidth(csvStructure.widthIndex, splitLine);
     this.setDraft(csvStructure.draftIndex, splitLine);
     this.setCargo(csvStructure.cargoIndex, splitLine);
-    this.setTooltip(csvStructure, splitLine);
+    this.setLabel(splitLine, vesselsLabeled, csvStructure);
+    this.setTooltip(csvStructure, splitLine, vesselsLabeled);
+
   }
 
-  addMessageRawRealTime(splitLine: string[], csvStructure): void {
+  addMessageRawRealTime(splitLine: string[], csvStructure, vesselsLabeled: string[]): void {
     const index = this.index.get(splitLine[csvStructure.mmsiIndex]);
     if (index === undefined) {
-      this.addMessageRaw(splitLine, csvStructure);
+      this.addMessageRaw(splitLine, csvStructure, vesselsLabeled);
     } else {
       this.replace(splitLine, csvStructure, index);
     }
@@ -189,9 +193,20 @@ export class Message {
     }
   }
 
-  private setTooltip(csvStructure: CsvStructure, splitLine: string[]): void {
-    const tooltipText = splitLine[csvStructure.mmsiIndex] + '<br>time: ' +
+  private setLabel(splitLine: string[], vesselsLabeled: string[], csvStructure: CsvStructure): void {
+    if (vesselsLabeled.includes(splitLine[csvStructure.mmsiIndex])) {
+      this.label.push(LabelType.DEC);
+    } else {
+      this.label.push(LabelType.NONE);
+    }
+  }
+
+  private setTooltip(csvStructure: CsvStructure, splitLine: string[], vesselsLabeled: string[]): void {
+    let tooltipText = splitLine[csvStructure.mmsiIndex] + '<br>time: ' +
       Message.secondsToReadableString(Number(splitLine[csvStructure.timeIndex]));
+    if (vesselsLabeled.includes(splitLine[csvStructure.mmsiIndex])) {
+      tooltipText += '<br>Label : ASD';
+    }
     this.tooltip.push(tooltipText);
   }
 

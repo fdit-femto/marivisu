@@ -7,7 +7,6 @@ export class Vessels {
   vessels: Map<number, Vessel>;
   newVessels: Map<number, Vessel>;
 
-
   messages: Message;
 
   vesselsLabeled: string[];
@@ -41,7 +40,7 @@ export class Vessels {
     } else {
       this.vessels.get(Number(splitLine[csvStructure.mmsiIndex])).addMessageRaw(splitLine, csvStructure);
     }
-    this.messages.addMessageRawRealTime(splitLine, csvStructure);
+    this.messages.addMessageRawRealTime(splitLine, csvStructure, this.vesselsLabeled);
     this.determineFirstAppearance(splitLine[csvStructure.timeIndex]);
     this.determineLastAppearance(splitLine[csvStructure.timeIndex]);
     this.numberOfMessages++;

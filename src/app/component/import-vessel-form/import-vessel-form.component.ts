@@ -94,7 +94,6 @@ export class ImportVesselFormComponent implements OnInit {
 
   formatJsonToCsv(json: any): string {
     let csv = '';
-    // console.log(json);
     try {
       if (!Array.isArray(json)) {
         json = JSON.parse(json);
@@ -107,7 +106,6 @@ export class ImportVesselFormComponent implements OnInit {
         csv = csv.concat(element.SOG, '\n');
       });
     } catch (e) {
-      // console.log('not a Json');
     }
 
     return csv;
