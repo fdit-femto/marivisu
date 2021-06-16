@@ -17,7 +17,7 @@ export class Vessels {
   constructor() {
     this.vessels = new Map<number, Vessel>();
     this.newVessels = new Map<number, Vessel>();
-    this.messages = new Message(undefined, undefined);
+    this.messages = new Message(undefined, undefined, undefined);
     this.numberOfMessages = 0;
     this.vesselsLabeled = [];
   }
@@ -35,7 +35,7 @@ export class Vessels {
 
   addMessage(splitLine, csvStructure: CsvStructure): void {
     if (!this.vessels.get(Number(splitLine[csvStructure.mmsiIndex]))) {
-      this.vessels.set(Number(splitLine[csvStructure.mmsiIndex]), new Vessel(new Message(splitLine, csvStructure)));
+      this.vessels.set(Number(splitLine[csvStructure.mmsiIndex]), new Vessel(new Message(splitLine, csvStructure, undefined)));
       this.determineFirstAppearance(splitLine[csvStructure.mmsiIndex]);
     } else {
       this.vessels.get(Number(splitLine[csvStructure.mmsiIndex])).addMessageRaw(splitLine, csvStructure);

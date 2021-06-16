@@ -61,7 +61,6 @@ export class Message {
     this.setCargo(csvStructure.cargoIndex, splitLine);
     this.setLabel(splitLine, vesselsLabeled, csvStructure);
     this.setTooltip(csvStructure, splitLine, vesselsLabeled);
-
   }
 
   addMessageRawRealTime(splitLine: string[], csvStructure, vesselsLabeled: string[]): void {
@@ -194,6 +193,9 @@ export class Message {
   }
 
   private setLabel(splitLine: string[], vesselsLabeled: string[], csvStructure: CsvStructure): void {
+    if (vesselsLabeled === undefined) {
+      return;
+    }
     if (vesselsLabeled.includes(splitLine[csvStructure.mmsiIndex])) {
       this.label.push(LabelType.DEC);
     } else {
@@ -202,6 +204,9 @@ export class Message {
   }
 
   private setTooltip(csvStructure: CsvStructure, splitLine: string[], vesselsLabeled: string[]): void {
+    if (vesselsLabeled === undefined) {
+      return;
+    }
     let tooltipText = splitLine[csvStructure.mmsiIndex] + '<br>time: ' +
       Message.secondsToReadableString(Number(splitLine[csvStructure.timeIndex]));
     if (vesselsLabeled.includes(splitLine[csvStructure.mmsiIndex])) {

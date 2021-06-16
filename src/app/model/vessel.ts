@@ -14,7 +14,7 @@ export class Vessel {
   }
 
   addMessageRaw(splitLine: string[], csvStructure): void {
-    this.messages.addMessageRaw(splitLine, csvStructure);
+    this.messages.addMessageRaw(splitLine, csvStructure, undefined);
   }
 
   addLabel(label: Label): void {
