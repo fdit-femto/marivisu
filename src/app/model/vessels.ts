@@ -1,12 +1,13 @@
 import {Vessel} from './vessel';
 import {Message} from './message';
 import {CsvStructure} from './csv-structure';
+import {Label} from './label';
 
 export class Vessels {
   allVessels: Map<number, Vessel>;
   vessels: Map<number, Vessel>;
   newVessels: Map<number, Vessel>;
-
+  vesselsLabeledMap: Map<number, Label>;
   messages: Message;
 
   vesselsLabeled: string[];
@@ -17,6 +18,7 @@ export class Vessels {
   constructor() {
     this.vessels = new Map<number, Vessel>();
     this.newVessels = new Map<number, Vessel>();
+    this.vesselsLabeledMap = new Map<number, Label>();
     this.messages = new Message(undefined, undefined, undefined);
     this.numberOfMessages = 0;
     this.vesselsLabeled = [];
@@ -46,8 +48,14 @@ export class Vessels {
     this.numberOfMessages++;
   }
 
-  addLabel(mmsi: string): void {
-    this.vesselsLabeled.push(mmsi);
+  addLabel(label: Label): void {
+    this.vesselsLabeled.push(label.mmsi);
+    if (!this.vesselsLabeledMap.get(Number(label.mmsi))) {
+      this.vesselsLabeledMap.set(Number(label.mmsi), new Vessel(new Message(splitLine, csvStructure, undefined)));
+      this.determineFirstAppearance(splitLine[csvStructure.mmsiIndex]);
+    } else {
+      this.vesselsLabeledMap.get(Number(splitLine[csvStructure.mmsiIndex])).addMessageRaw(splitLine, csvStructure);
+    }
   }
 
   addVessel(vessel: Vessel): void {

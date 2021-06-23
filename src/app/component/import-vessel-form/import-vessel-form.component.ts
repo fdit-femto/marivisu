@@ -49,7 +49,7 @@ export class ImportVesselFormComponent implements OnInit {
     label.forEach(element => {
       if (this.vessels.vessels.get(element.mmsi) !== undefined) {
         this.vessels.vessels.get(element.mmsi).addLabel(element);
-        this.vessels.addLabel(element.mmsi);
+        this.vessels.addLabel(element);
       }
     });
   }
