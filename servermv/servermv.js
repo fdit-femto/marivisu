@@ -1,16 +1,9 @@
-const SVessel = require('./model/SVessel.js')
-const SLabel = require('./model/SLabel.js')
 const express = require('express')
 const cors = require('cors');
 const net = require('net');
 const bodyParser = require('body-parser');
 const elasticsearch = require('elasticsearch');
 const server = express()
-
-const labelType = {
-  NONE: 0,
-  ASD: 1
-}
 
 const elasticsearchClient = new elasticsearch.Client({
   node: 'https://localhost:9200'
@@ -31,9 +24,7 @@ server.use(cors())
 server.use(parseRawBody);
 
 const port = 5000
-let dataVessels = new Map();
 let newDataVessels = new Map();
-let labels = new Map();
 
 async function esDelete() {
   await elasticsearchClient.indices.delete({index: 'ais'})
@@ -78,7 +69,7 @@ async function esPutMapping() {
     body: {
       properties: {
         "MMSI": {"type": "integer"},
-        "timestamp": {"type": "date"},
+        "timestamp": {"type": "date", "format": "epoch_millis"},
         "position": {"type": "geo_point"},
         "SOG": {"type": "integer"},
         "label": {"type": "text"}
@@ -88,7 +79,7 @@ async function esPutMapping() {
 }
 
 async function bulk(data) {
-  const body = data.flatMap(doc => [{index: {_index: 'ais', _id: doc.MMSI}}, createPositionField(doc)])
+  const body = data.flatMap(doc => [{index: {_index: 'ais'}}, createPositionField(doc)])
   await elasticsearchClient.bulk({refresh: true, body}, function (err, resp) {
     if (resp.errors) {
       const erroredDocuments = []
@@ -106,7 +97,67 @@ async function bulk(data) {
       console.log(erroredDocuments)
     }
   })
+}
 
+async function esGetLabel() {
+  return await elasticsearchClient.search({
+    index: 'ais',
+    body: {
+      query: {
+        exists: {
+          field: 'label'
+        }
+      }
+    }
+  })
+}
+
+async function esPostUpdateLabel(label) {
+  await elasticsearchClient.updateByQuery({
+    index: 'ais',
+    refresh: true,
+    body: {
+      query: {
+        bool: {
+          must: [
+            {match: {MMSI: label.MMSI}},
+          ]
+        }
+      },
+      script: {
+        source: 'ctx._source.label = params.label',
+        lang: 'painless',
+        params: {
+          label: 'AIS-S'
+        }
+      }
+    }
+  })
+}
+
+//TODO: use search after to retrieve all the result
+async function esGetLastMessage() {
+  return await elasticsearchClient.search({
+    index: 'ais',
+    body: {
+      size: 10000,
+      query: {
+        match_all: {}
+      },
+      collapse: {
+        field: "MMSI",
+        inner_hits: {
+          name: "most_recent",
+          size: 1,
+          sort: [
+            {
+              timestamp: "desc"
+            }
+          ]
+        }
+      }
+    }
+  })
 }
 
 
@@ -123,7 +174,8 @@ server.get('/', (request, response) => {
  * ElasticSearch
  */
 server.post('/api/send_data', (request, response) => {
-  let dataReceived = JSON.parse(JSON.parse(request.rawBody));
+  // let dataReceived = JSON.parse(JSON.parse(request.rawBody));
+  let dataReceived = JSON.parse(request.rawBody);
   bulk(dataReceived).then(res => {
     console.log(res)
   }).catch(err => console.log(err))
@@ -131,38 +183,21 @@ server.post('/api/send_data', (request, response) => {
 });
 
 /**
- * Receive data vessel.
- */
-// server.post('/api/send_data', (request, response) => {
-//   let dataReceived = JSON.parse(JSON.parse(request.rawBody));
-//   dataReceived.forEach(element => {
-//     if (!dataVessels.has(element.MMSI)) {
-//       const vessel = new SVessel();
-//       vessel.addMessage(element);
-//       dataVessels.set(element.MMSI, vessel);
-//     } else {
-//       dataVessels.get(element.MMSI).addMessage(element);
-//     }
-//     if (!newDataVessels.has(element.MMSI)) {
-//       const vessel = new SVessel();
-//       vessel.addMessage(element);
-//       newDataVessels.set(element.MMSI, vessel);
-//     } else {
-//       newDataVessels.get(element.MMSI).addMessage(element);
-//     }
-//   })
-//   response.sendStatus(200);
-// });
-
-/**
  * Receive label vessel.
  */
 server.post('/data/label', (request, response) => {
-  let dataReceived = JSON.parse(JSON.parse(request.rawBody));
+  // let dataReceived = JSON.parse(JSON.parse(request.rawBody));
+  let dataReceived = JSON.parse(request.rawBody);
   dataReceived.forEach(element => {
-    labels.set(element.MMSI, new SLabel(element.MMSI, element.timestamp, element.LAT, element.LON, labelType.ASD))
+    esPostUpdateLabel(element).then(res => {
+      console.log(res)
+      response.sendStatus(200);
+    }).catch(err => {
+      console.log(err)
+      response.status(500)
+    })
   })
-  response.sendStatus(200);
+
 });
 
 /**
@@ -170,8 +205,14 @@ server.post('/data/label', (request, response) => {
  */
 server.get('/data', (request, response) => {
   console.log('--data get--');
-  response.json(sendDataMessages())
-  newDataVessels.clear()
+
+  esGetLastMessage().then(res => {
+    let dataToSend = []
+    res.hits.hits.forEach(element => {
+      dataToSend.push(element.inner_hits.most_recent.hits.hits[0]._source)
+    })
+    response.json(dataToSend)
+  }).catch(err => console.log(err))
 });
 
 /**
@@ -179,29 +220,14 @@ server.get('/data', (request, response) => {
  */
 server.get('/label', (request, response) => {
   console.log('--label get--');
-  response.json(sendDataLabel())
+  esGetLabel().then(res => {
+    if (res.hits.hits.length !== 0) {
+      response.json(res.hits.hits[0]._source)
+    } else {
+      response.json([])
+    }
+  }).catch(err => console.log(err))
 });
-
-function sendDataMessages() {
-  let dataToSend = [];
-
-  dataVessels.forEach(element => {
-    dataToSend = dataToSend.concat(element.data.messages[element.data.messages.length - 1])
-  })
-  console.log('data sent : \n', dataToSend.length, '\n')
-  return dataToSend;
-}
-
-function sendDataLabel() {
-  let dataToSend = [];
-
-  labels.forEach(element => {
-    dataToSend = dataToSend.concat(element)
-  })
-  console.log('data sent : \n', dataToSend, '\n')
-  return dataToSend;
-}
-
 
 //FDIT servermv
 const serverExFDIT = express()
