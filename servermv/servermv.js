@@ -24,7 +24,6 @@ server.use(cors())
 server.use(parseRawBody);
 
 const port = 5000
-let newDataVessels = new Map();
 
 async function esDelete() {
   await elasticsearchClient.indices.delete({index: 'ais'})

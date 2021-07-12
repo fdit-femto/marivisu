@@ -44,33 +44,16 @@ export class ImportVesselFormComponent implements OnInit {
     this.vesselsService.changeAllVesselsSet(this.vessels);
   }
 
-
-  private addLabel(label: any): void {
-    label.forEach(element => {
-      if (this.vessels.vessels.get(element.mmsi) !== undefined) {
-        this.vessels.vessels.get(element.mmsi).addLabel(element);
-        this.vessels.addLabel(element);
-      }
-    });
-  }
-
   submit(): void {
     let vesselsString = '';
-    let vesselslabel = '';
     this.interval = interval(1000);
     this.requestSender = interval(1000).subscribe(() => {
       this.clientService.getVessels().subscribe((data: string) => vesselsString = data);
-      if (this.isFDITMode === 'false') {
-        this.clientService.getLabel().subscribe((data: string) => vesselslabel = data);
-      }
       if (vesselsString !== '') {
         if (this.isFDITMode === 'false') {
           this.vessels.clear();
           vesselsString = this.formatJsonToCsv(vesselsString);
           this.addVessels(vesselsString);
-          if (Array.isArray(vesselslabel) && vesselslabel.length !== 0) {
-            this.addLabel(vesselslabel);
-          }
         } else {
           this.addVessels(vesselsString);
         }
@@ -113,10 +96,6 @@ export class ImportVesselFormComponent implements OnInit {
 
   stopRequest(): void {
     this.requestSender.unsubscribe();
-  }
-
-  private disconect(): void {
-    this.vessels = new Vessels();
   }
 
   ngOnInit(): void {

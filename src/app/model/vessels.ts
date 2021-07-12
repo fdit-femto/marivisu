@@ -48,23 +48,9 @@ export class Vessels {
     this.numberOfMessages++;
   }
 
-  addLabel(label: Label): void {
-    this.vesselsLabeled.push(label.mmsi);
-    if (!this.vesselsLabeledMap.get(Number(label.mmsi))) {
-      this.vesselsLabeledMap.set(Number(label.mmsi), new Vessel(new Message(splitLine, csvStructure, undefined)));
-      this.determineFirstAppearance(splitLine[csvStructure.mmsiIndex]);
-    } else {
-      this.vesselsLabeledMap.get(Number(splitLine[csvStructure.mmsiIndex])).addMessageRaw(splitLine, csvStructure);
-    }
-  }
-
   addVessel(vessel: Vessel): void {
     this.vessels.set(Number(vessel.getMMSI()), vessel);
   }
-
-  // sortAllTraceInVesselByDate(): void {
-  //   this.vessels.forEach(value => value.populateTrace());
-  // }
 
   determineFirstAppearance(time: string): void {
     const timeInS = Date.parse(time) / 1000;
