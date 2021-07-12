@@ -75,6 +75,19 @@ async function esPutMapping() {
       }
     }
   });
+
+  await elasticsearchClient.indices.putMapping({
+    index: 'aisCurrent',
+    body: {
+      properties: {
+        "MMSI": {"type": "integer"},
+        "timestamp": {"type": "date", "format": "epoch_millis"},
+        "position": {"type": "geo_point"},
+        "SOG": {"type": "integer"},
+        "label": {"type": "text"}
+      }
+    }
+  });
 }
 
 async function bulk(data) {
@@ -134,31 +147,33 @@ async function esPostUpdateLabel(label) {
   })
 }
 
-//TODO: use search after to retrieve all the result
-async function esGetLastMessage() {
-  return await elasticsearchClient.search({
-    index: 'ais',
+async function esGetLastMessageInitScroll() {
+  const allRecords = [];
+
+  await elasticsearchClient.search({
+    index: 'aisCurrent',
+    scroll: '40s',
     body: {
-      size: 10000,
       query: {
-        match_all: {}
-      },
-      collapse: {
-        field: "MMSI",
-        inner_hits: {
-          name: "most_recent",
-          size: 1,
-          sort: [
-            {
-              timestamp: "desc"
-            }
-          ]
-        }
+        "match_all": {}
       }
     }
-  })
+  }, function getMoreUntilDone(error, response) {
+    response.hits.hits.forEach(hit => {
+      allRecords.push(hit);
+    });
+    if (response.hits.total !== allRecords.length) {
+      // now we can call scroll over and over
+      client.scroll({
+        scrollId: response._scroll_id,
+        scroll: '40s'
+      }, getMoreUntilDone);
+    } else {
+      console.log('all done', allRecords);
+    }
+  });
+  return allRecords;
 }
-
 
 server.listen(port, () => {
   esInit().then(res => console.log(res)).catch(err => console.log(err))
@@ -204,13 +219,8 @@ server.post('/data/label', (request, response) => {
  */
 server.get('/data', (request, response) => {
   console.log('--data get--');
-
-  esGetLastMessage().then(res => {
-    let dataToSend = []
-    res.hits.hits.forEach(element => {
-      dataToSend.push(element.inner_hits.most_recent.hits.hits[0]._source)
-    })
-    response.json(dataToSend)
+  esGetLastMessageInitScroll().then(res => {
+    response.json(res)
   }).catch(err => console.log(err))
 });
 
