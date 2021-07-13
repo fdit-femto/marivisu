@@ -27,17 +27,19 @@ const port = 5000
 
 async function esDelete() {
   await elasticsearchClient.indices.delete({index: 'ais'})
+  await elasticsearchClient.indices.delete({index: 'aiscurrent'})
 }
 
 async function esCreateIndices() {
   await elasticsearchClient.indices.create({index: 'ais'})
+  await elasticsearchClient.indices.create({index: 'aiscurrent'})
 }
 
 async function esInit() {
-  await elasticsearchClient.indices.exists({index: 'ais'}, (err, res, status) => {
+  await elasticsearchClient.indices.exists({index: 'ais'}, (err, res) => {
     if (res) {
       esDelete()
-        .then(res => {
+        .then(() => {
           console.log("[ES] delete");
         })
         .catch(err => console.log('[ERROR] : ' + err))
@@ -77,7 +79,7 @@ async function esPutMapping() {
   });
 
   await elasticsearchClient.indices.putMapping({
-    index: 'aisCurrent',
+    index: 'aiscurrent',
     body: {
       properties: {
         "MMSI": {"type": "integer"},
@@ -126,6 +128,27 @@ async function esGetLabel() {
 
 async function esPostUpdateLabel(label) {
   await elasticsearchClient.updateByQuery({
+    index: 'aiscurrent',
+    refresh: true,
+    body: {
+      query: {
+        bool: {
+          must: [
+            {match: {MMSI: label.MMSI}},
+          ]
+        }
+      },
+      script: {
+        source: 'ctx._source.label = params.label',
+        lang: 'painless',
+        params: {
+          label: 'AIS-S'
+        }
+      }
+    }
+  })
+
+  await elasticsearchClient.updateByQuery({
     index: 'ais',
     refresh: true,
     body: {
@@ -151,7 +174,7 @@ async function esGetLastMessageInitScroll() {
   const allRecords = [];
 
   await elasticsearchClient.search({
-    index: 'aisCurrent',
+    index: 'aiscurrent',
     scroll: '40s',
     body: {
       query: {
@@ -163,8 +186,7 @@ async function esGetLastMessageInitScroll() {
       allRecords.push(hit);
     });
     if (response.hits.total !== allRecords.length) {
-      // now we can call scroll over and over
-      client.scroll({
+      elasticsearchClient.scroll({
         scrollId: response._scroll_id,
         scroll: '40s'
       }, getMoreUntilDone);
@@ -259,15 +281,10 @@ serverExFDIT.get('/client/getMessages', (request, response) => {
   response.json(vesselsData)
 })
 
-serverExFDIT.post('/client/startClient', (request, response) => {
+serverExFDIT.post('/client/startClient', (request) => {
   console.log(`Starting client.`)
   startClient(request.body)
 });
-
-
-function diff(strToRemove, str) {
-  return str.split(strToRemove).join('')
-}
 
 function startClient(clientModel) {
   client.connect(clientModel.port, clientModel.ip, function () {
