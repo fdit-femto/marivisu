@@ -93,6 +93,28 @@ async function esPutMapping() {
 }
 
 async function bulk(data) {
+  for (const message of data) {
+    await elasticsearchClient.update({
+      index: 'aiscurrent',
+      id: message.MMSI,
+      body: {
+        doc: {
+          MMSI: message.MMSI,
+          timestamp: message.timestamp,
+          position: {
+            lat: message["LAT"],
+            lon: message["LON"]
+          },
+          SOG: message.SOG,
+          LAT: message.LAT,
+          LON: message.LON
+        },
+        doc_as_upsert: true
+      }
+    })
+  }
+
+
   const body = data.flatMap(doc => [{index: {_index: 'ais'}}, createPositionField(doc)])
   await elasticsearchClient.bulk({refresh: true, body}, function (err, resp) {
     if (resp.errors) {
@@ -112,6 +134,8 @@ async function bulk(data) {
     }
   })
 }
+
+
 
 async function esGetLabel() {
   return await elasticsearchClient.search({
@@ -170,7 +194,7 @@ async function esPostUpdateLabel(label) {
   })
 }
 
-async function esGetLastMessageInitScroll() {
+async function esGetLastMessageInitScroll(repsonse) {
   const allRecords = [];
 
   await elasticsearchClient.search({
@@ -185,7 +209,7 @@ async function esGetLastMessageInitScroll() {
     response.hits.hits.forEach(hit => {
       allRecords.push(hit);
     });
-    if (response.hits.total !== allRecords.length) {
+    if (response.hits.total.value !== allRecords.length) {
       elasticsearchClient.scroll({
         scrollId: response._scroll_id,
         scroll: '40s'
@@ -239,11 +263,33 @@ server.post('/data/label', (request, response) => {
 /**
  * Send data to front.
  */
-server.get('/data', (request, response) => {
+server.get('/data', (request, responseCli) => {
   console.log('--data get--');
-  esGetLastMessageInitScroll().then(res => {
-    response.json(res)
-  }).catch(err => console.log(err))
+  const allRecords = [];
+
+  elasticsearchClient.search({
+    index: 'aiscurrent',
+    scroll: '40s',
+    body: {
+      query: {
+        "match_all": {}
+      }
+    }
+  }, function getMoreUntilDone(error, response) {
+    response.hits.hits.forEach(hit => {
+      allRecords.push(hit._source);
+    });
+    if (response.hits.total.value !== allRecords.length) {
+      elasticsearchClient.scroll({
+        scrollId: response._scroll_id,
+        scroll: '40s'
+      }, getMoreUntilDone);
+    } else {
+      console.log('all done', allRecords);
+      responseCli.json(allRecords)
+
+    }
+  });
 });
 
 /**
