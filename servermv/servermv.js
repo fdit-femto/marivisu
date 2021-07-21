@@ -234,7 +234,7 @@ server.get('/', (request, response) => {
  * ElasticSearch
  */
 server.post('/api/send_data', (request, response) => {
-  // let dataReceived = JSON.parse(JSON.parse(request.rawBody));
+  // let dataReceived = JSON.parse(JSON.parse(request.rawBody)); Que avec le script Python de PB. Pas avec le postman.
   let dataReceived = JSON.parse(request.rawBody);
   bulk(dataReceived).then(res => {
     console.log(res)
@@ -261,7 +261,7 @@ server.post('/data/label', (request, response) => {
 });
 
 /**
- * Send data to front.
+ * Send data to front. Pull from Front
  */
 server.get('/data', (request, responseCli) => {
   console.log('--data get--');
