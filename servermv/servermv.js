@@ -136,7 +136,6 @@ async function bulk(data) {
 }
 
 
-
 async function esGetLabel() {
   return await elasticsearchClient.search({
     index: 'ais',
@@ -276,18 +275,60 @@ server.get('/data', (request, responseCli) => {
       }
     }
   }, function getMoreUntilDone(error, response) {
-    response.hits.hits.forEach(hit => {
-      allRecords.push(hit._source);
-    });
-    if (response.hits.total.value !== allRecords.length) {
-      elasticsearchClient.scroll({
-        scrollId: response._scroll_id,
-        scroll: '40s'
-      }, getMoreUntilDone);
+    if (error) {
+      console.log(error)
+      responseCli.json(error)
     } else {
-      console.log('all done', allRecords);
-      responseCli.json(allRecords)
+      response.hits.hits.forEach(hit => {
+        allRecords.push(hit._source);
+      });
+      if (response.hits.total.value !== allRecords.length) {
+        elasticsearchClient.scroll({
+          scrollId: response._scroll_id,
+          scroll: '40s'
+        }, getMoreUntilDone);
+      } else {
+        console.log('all done', allRecords);
+        responseCli.json(allRecords)
 
+      }
+    }
+  });
+});
+
+
+server.get('/vessel', (request, responseCli) => {
+  console.log('--data get--');
+  const allRecords = [];
+  const body = JSON.parse(request.rawBody)
+  elasticsearchClient.search({
+    index: 'ais',
+    scroll: '40s',
+    body: {
+      query: {
+        match: {
+            MMSI: body.mmsi
+        }
+      }
+    }
+  }, function getMoreUntilDone(error, response) {
+    if (error) {
+      console.log(error)
+      responseCli.json(error)
+    } else {
+      response.hits.hits.forEach(hit => {
+        allRecords.push(hit._source);
+      });
+      if (response.hits.total.value !== allRecords.length) {
+        elasticsearchClient.scroll({
+          scrollId: response._scroll_id,
+          scroll: '40s'
+        }, getMoreUntilDone);
+      } else {
+        console.log('all done', allRecords);
+        responseCli.json(allRecords)
+
+      }
     }
   });
 });
