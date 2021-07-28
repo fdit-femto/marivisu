@@ -300,14 +300,13 @@ server.get('/data', (request, responseCli) => {
 server.get('/vessel', (request, responseCli) => {
   console.log('--data get--');
   const allRecords = [];
-  const body = JSON.parse(request.rawBody)
   elasticsearchClient.search({
     index: 'ais',
     scroll: '40s',
     body: {
       query: {
         match: {
-            MMSI: body.mmsi
+            MMSI: request.query.mmsi
         }
       }
     }

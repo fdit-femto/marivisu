@@ -62,8 +62,8 @@ export class ClientService {
     }
   }
 
-  getVesselsJson(): Observable<any> {
-    return this.http.get(this.baseUrl + '/data');
+  getVessel(mmsi: string): Observable<any> {
+    return this.http.get(this.baseUrl + '/vessel?mmsi=' + mmsi);
   }
 
 

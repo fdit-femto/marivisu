@@ -219,4 +219,16 @@ export class Message {
     this.tooltip[index] = splitLine[csvStructure.mmsiIndex] + '<br>time: ' +
       Message.secondsToReadableString(Number(splitLine[csvStructure.timeIndex]));
   }
+
+  addMessageJson(data: any[]): void {
+    data.forEach(message => {
+      this.mmsi.push(message.mmsi);
+      this.time.push(message.time);
+      this.relativeTimeInS.push(message.relativeTimeInS);
+      this.latitude.push(message.latitude);
+      this.longitude.push(message.longitude);
+      this.speedOverGround.push(message.speedOverGround);
+    });
+
+  }
 }
