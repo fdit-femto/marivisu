@@ -17,7 +17,7 @@ export class Vessel {
     this.messages.addMessageRaw(splitLine, csvStructure, undefined);
   }
 
-  addMessageJson(data: object): void{
+  addMessageJson(data: any): void{
     this.messages.addMessageJson(data);
   }
 
