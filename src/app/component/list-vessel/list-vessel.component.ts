@@ -3,6 +3,7 @@ import {VesselsService} from '../../service/vessels.service';
 import {Vessels} from '../../model/vessels';
 import {Vessel} from '../../model/vessel';
 import {SelectedVesselService} from '../../service/selected-vessel.service';
+import {ClientService} from '../../service/client-service.service';
 
 declare var $: any;
 
@@ -15,7 +16,8 @@ export class ListVesselComponent implements OnInit {
   vessels: Vessels;
   selectedVessel: Vessel;
 
-  constructor(private vesselsService: VesselsService, private selectedVesselService: SelectedVesselService) {
+  constructor(private vesselsService: VesselsService, private selectedVesselService: SelectedVesselService,
+              private clientService: ClientService) {
   }
 
   ngOnInit(): void {
@@ -26,6 +28,7 @@ export class ListVesselComponent implements OnInit {
     });
 
     this.selectedVesselService.currentVessel.subscribe(selectedVessel => {
+      this.selectedVessel.addMessageJson(this.clientService.getVessel(selectedVessel.getMMSI()));
       this.selectedVessel = selectedVessel;
     });
 

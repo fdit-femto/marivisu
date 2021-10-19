@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {BehaviorSubject} from 'rxjs';
 import {Vessel} from '../model/vessel';
 import {Message} from '../model/message';
+import {ClientService} from './client-service.service';
 
 @Injectable({
   providedIn: 'root'
@@ -18,13 +19,17 @@ export class SelectedVesselService {
   private selectedVessel = new BehaviorSubject(new Vessel(Message.messageEmpty()));
   currentVessel = this.selectedVessel.asObservable();
 
-  constructor() {
+  constructor(private clientService: ClientService) {
   }
 
   changeVesselSet(newVessel: Vessel): void {
     this._mmsi = newVessel.getMMSI();
-    this.selectedVessel.next(newVessel);
-    this.selectedVesselAllMessages.next(newVessel);
+    const newSelectedVessel = new Vessel(Message.messageEmpty());
+    this.clientService.getVessel(newVessel.getMMSI()).subscribe((data: string) => {
+      newSelectedVessel.addMessageJson(data);
+      this.selectedVessel.next(newSelectedVessel);
+      this.selectedVesselAllMessages.next(newSelectedVessel);
+    });
   }
 
 
